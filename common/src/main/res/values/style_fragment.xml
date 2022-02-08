@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="BaseBottomDialogTheme" parent="Theme.MaterialComponents.BottomSheetDialog">
+    <item name="bottomSheetStyle">@style/BaseBottomDialogStyle</item>
+    <item name="android:theme">@style/Theme.Holiday</item>
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowSoftInputMode">adjustResize</item>
+  </style>
+
+  <style name="BaseBottomDialogStyle" parent="Widget.Design.BottomSheet.Modal">
+    <item name="android:background">@drawable/background_border_top</item>
+  </style>
+
+  <style name="BaseDialogTheme" parent="Base.Theme.AppCompat.Dialog">
+    <item name="android:windowMinWidthMajor">100%</item>
+    <item name="android:windowMinWidthMinor">100%</item>
+  </style>
+</resources>

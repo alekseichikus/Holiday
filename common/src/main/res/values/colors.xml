@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!--TEXT-->
+  <color name="textPrimary">#1f1f1f</color>
+  <color name="textSecondary">#5f5f5f</color>
+  <color name="textTertiary">#9f9f9f</color>
+  <color name="textLink">#438bf7</color>
+
+  <!--BKG-->
+  <color name="backgroundContent">#FFFFFF</color>
+  <color name="backgroundFill">#F4F4F4</color>
+  <color name="backgroundButtonTransparent">#cc313435</color>
+  <color name="backgroundButtonTransparent2">#cc121314</color>
+  <color name="backgroundGreen">#33C75A</color>
+  <color name="backgroundBlue">#dcf1f9</color>
+  <color name="backgroundOrange">#ffa500</color>
+  <color name="backgroundButtonTransparentLight">#ccFFFFFF</color>
+  <color name="backgroundDestructive">#FF3347</color>
+
+
+  <color name="itemColor1">#dcdfe0</color>
+  <color name="itemColor2">#f6de9d</color>
+  <color name="itemColor3">#b4d1c4</color>
+  <color name="itemColor4">#f2b1ac</color>
+  <color name="itemColor5">#bebade</color>
+
+  <!--BKG TRANSPARENT-->
+  <color name="backgroundTransparentPrimary">#20313435</color>
+  <color name="backgroundTransparentPrimarySecond">#80313435</color>
+
+  <color name="transparent">#00000000</color>
+  <color name="black">#000000</color>
+  <color name="white">#FFFFFF</color>
+</resources>

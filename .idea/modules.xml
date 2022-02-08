@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Holiday.iml" filepath="$PROJECT_DIR$/.idea/modules/Holiday.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Holiday.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Holiday.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/Holiday.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/Holiday.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-country-utils/Holiday.feature-country-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-country-utils/Holiday.feature-country-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-day-utils/Holiday.feature-day-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-day-utils/Holiday.feature-day-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-holiday-api/Holiday.feature-holiday-api.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-holiday-api/Holiday.feature-holiday-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-holiday-impl/Holiday.feature-holiday-impl.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-holiday-impl/Holiday.feature-holiday-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-holiday-utils/Holiday.feature-holiday-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-holiday-utils/Holiday.feature-holiday-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-network-impl/Holiday.feature-network-impl.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-network-impl/Holiday.feature-network-impl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-photo-utils/Holiday.feature-photo-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-photo-utils/Holiday.feature-photo-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/fragment-main/Holiday.fragment-main.iml" filepath="$PROJECT_DIR$/.idea/modules/fragment-main/Holiday.fragment-main.iml" />
+    </modules>
+  </component>
+</project>

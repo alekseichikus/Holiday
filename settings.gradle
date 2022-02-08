@@ -1,0 +1,19 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter() // Warning: this repository is going to shut down soon
+    }
+}
+rootProject.name = "Holiday"
+include ':app'
+include ':common'
+include ':feature-day-utils'
+include ':feature-holiday-api'
+include ':feature-holiday-utils'
+include ':feature-network-impl'
+include ':feature-photo-utils'
+include ':feature-country-utils'
+include ':feature-holiday-impl'
+include ':fragment-main'
