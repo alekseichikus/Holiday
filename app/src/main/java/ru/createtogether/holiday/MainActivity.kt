@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.common.databinding.ActivityMainBinding
@@ -20,10 +21,12 @@ import ru.createtogether.fragment_main.presenter.viewModel.MainViewModel
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), MainActions {
     private lateinit var binding: ActivityMainBinding
-    private val mainViewModel: MainViewModel by viewModels<()
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        initData()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,6 +37,10 @@ class MainActivity : AppCompatActivity(), MainActions {
 
     private fun configureViews() {
         hideSystemUI()
+    }
+
+    private fun initData(){
+        mainViewModel.versionCode = BuildConfig.VERSION_NAME
     }
 
     private fun hideSystemUI() {

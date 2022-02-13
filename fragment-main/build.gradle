@@ -55,6 +55,8 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.7.1"
     implementation project(path: ':feature-worker-impl')
 
+    implementation project(path: ':feature-cache-impl')
+
     implementation project(path: ':feature-holiday-impl')
     implementation project(path: ':feature-holiday')
     implementation project(path: ':fragment-holiday')

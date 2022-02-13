@@ -6,6 +6,6 @@ interface PreferenceStorage {
     fun isHolidayLike(holiday: Int): Boolean
     fun removeHolidayLikes(holiday: Int)
 
-    var versionCode: String
-    var nextDayWithHolidays: String
+    var versionCode: String?
+    var nextDayWithHolidays: String?
 }

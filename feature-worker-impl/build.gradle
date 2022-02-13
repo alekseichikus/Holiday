@@ -56,6 +56,8 @@ dependencies {
     implementation project(path: ':feature-holiday-api')
     implementation project(path: ':feature-holiday-utils')
 
+    implementation project(path: ':feature-photo-utils')
+
     implementation project(path: ':feature-network-impl')
 
     implementation project(path: ':common')

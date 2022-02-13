@@ -30,19 +30,26 @@ class HolidayWorker @AssistedInject constructor(
 
     override fun doWork(): Result {
         GlobalScope.launch {
-            Log.d("sdfasdsad", preferenceStorage.nextDayWithHolidays)
-            if (preferenceStorage.nextDayWithHolidays.isNotEmpty())
-                holidayRepository.loadHolidays(date = preferenceStorage.nextDayWithHolidays)
+            preferenceStorage.nextDayWithHolidays?.let { date ->
+                holidayRepository.loadHolidays(date = date)
                     .collect {
                         when (it.status) {
                             Status.SUCCESS -> {
-                                notificationRepository.createPush(
-                                    context = context,
-                                    notificationRepository.getData(title = "asdasd", body = "sdasdasd", reasonNotification = ReasonNotification.HOLIDAY)
-                                )
+                                it.data?.first()?.let { holiday ->
+                                    notificationRepository.createPush(
+                                        context = context,
+                                        notificationRepository.getData(
+                                            title = "${holiday.date}. ${holiday.title}",
+                                            body = holiday.description,
+                                            image = holiday.images?.first()?.url,
+                                            reasonNotification = ReasonNotification.HOLIDAY
+                                        )
+                                    )
+                                }
                             }
                         }
                     }
+            }
         }
         return Result.success()
     }

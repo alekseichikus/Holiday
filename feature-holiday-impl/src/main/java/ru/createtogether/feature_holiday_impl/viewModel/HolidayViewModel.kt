@@ -51,7 +51,7 @@ class HolidayViewModel @Inject constructor(
     }
 
     var nextDateWithHolidaysResponse = MutableLiveData<Event<DayModel>>()
-    fun loadNextDayWithHolidays(date: String){
+    fun loadNextDayWithHolidays(date: String) {
         viewModelScope.launch {
             holidayRepository.loadNextDayWithHolidays(date = date).collect {
                 nextDateWithHolidaysResponse.postValue(it)
@@ -69,5 +69,9 @@ class HolidayViewModel @Inject constructor(
         preferenceStorage.removeHolidayLikes(id)
     }
 
-    var nextDayWithHolidays = preferenceStorage.nextDayWithHolidays
+    var nextDayWithHolidays: String?
+        get() = preferenceStorage.nextDayWithHolidays
+        set(value) {
+            preferenceStorage.nextDayWithHolidays = value
+        }
 }

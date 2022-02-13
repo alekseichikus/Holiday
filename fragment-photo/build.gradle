@@ -54,7 +54,7 @@ dependencies {
     implementation project(path: ':feature-photo-utils')
     implementation project(path: ':feature-photo')
 
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 

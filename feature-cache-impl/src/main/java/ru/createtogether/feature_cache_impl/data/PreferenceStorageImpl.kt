@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
 import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
+import ru.createtogether.feature_cache_impl.helpers.Preferences
 import javax.inject.Inject
 
 class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceStorage {
@@ -40,14 +41,8 @@ class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceSt
         prefs.edit().putString(PREF_HOLIDAY_FAVORITES, Gson().toJson(holidays)).apply()
     }
 
-    override var versionCode: String
-        get() = prefs.getString(PREF_APP_VERSION_CODE, null).orEmpty()
-        set(value) = prefs.edit().putString(PREF_APP_VERSION_CODE, value).apply()
+    override var versionCode by Preferences.StringPreference(prefs, PREF_APP_VERSION_CODE, null)
 
-    override var nextDayWithHolidays: String
-        get() = prefs.getString(PREF_NEXT_DAY_WITH_HOLIDAYS, null).orEmpty()
-        set(value) {
-            Log.d("Sdasdasdsadsadasd", "dssdsdsd")
-            prefs.edit().putString(PREF_NEXT_DAY_WITH_HOLIDAYS, value).apply()
-        }
+    override var nextDayWithHolidays by Preferences.StringPreference(prefs, PREF_NEXT_DAY_WITH_HOLIDAYS, null)
+
 }
