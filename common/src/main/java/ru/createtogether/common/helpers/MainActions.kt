@@ -4,4 +4,5 @@ import androidx.annotation.ColorRes
 
 interface MainActions {
      fun changeNavigationBarColor(@ColorRes colorRes: Int)
+     fun showSnackBar(stringRes: Int)
 }

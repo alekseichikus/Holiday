@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InfoBoardView">
+        <attr name="ibvTitle" format="string" />
+        <attr name="ibvText" format="string" />
+        <attr name="ibvImage" format="reference" />
+    </declare-styleable>
+</resources>

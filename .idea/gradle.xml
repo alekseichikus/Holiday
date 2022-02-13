@@ -12,16 +12,28 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/bottom_calendar" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/feature-cache-impl" />
+            <option value="$PROJECT_DIR$/feature-characteristic" />
+            <option value="$PROJECT_DIR$/feature-characteristic-utils" />
             <option value="$PROJECT_DIR$/feature-country-utils" />
             <option value="$PROJECT_DIR$/feature-day-utils" />
+            <option value="$PROJECT_DIR$/feature-holiday" />
             <option value="$PROJECT_DIR$/feature-holiday-api" />
             <option value="$PROJECT_DIR$/feature-holiday-impl" />
             <option value="$PROJECT_DIR$/feature-holiday-utils" />
+            <option value="$PROJECT_DIR$/feature-info-board" />
             <option value="$PROJECT_DIR$/feature-network-impl" />
+            <option value="$PROJECT_DIR$/feature-notification-impl" />
+            <option value="$PROJECT_DIR$/feature-photo" />
             <option value="$PROJECT_DIR$/feature-photo-utils" />
+            <option value="$PROJECT_DIR$/feature-worker-impl" />
+            <option value="$PROJECT_DIR$/fragment-about" />
+            <option value="$PROJECT_DIR$/fragment-favorite" />
+            <option value="$PROJECT_DIR$/fragment-holiday" />
             <option value="$PROJECT_DIR$/fragment-main" />
+            <option value="$PROJECT_DIR$/fragment-photo" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
