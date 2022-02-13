@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="rate_app">Оцените приложение</string>
+    <string name="rate_app">Оценить приложение</string>
+    <string name="notify_about_holidays">Уведомлять о праздниках</string>
+    <string name="notify_about_holidays_description">С 9:00 до 14:00</string>
 </resources>

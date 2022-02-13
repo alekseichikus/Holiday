@@ -29,29 +29,46 @@ class HolidayWorker @AssistedInject constructor(
 ) : Worker(context, params) {
 
     override fun doWork(): Result {
-        GlobalScope.launch {
-            preferenceStorage.nextDayWithHolidays?.let { date ->
-                holidayRepository.loadHolidays(date = date)
-                    .collect {
-                        when (it.status) {
-                            Status.SUCCESS -> {
-                                it.data?.first()?.let { holiday ->
-                                    notificationRepository.createPush(
-                                        context = context,
-                                        notificationRepository.getData(
-                                            title = "${holiday.date}. ${holiday.title}",
-                                            body = holiday.description,
-                                            image = holiday.images?.first()?.url,
-                                            reasonNotification = ReasonNotification.HOLIDAY
+        if (preferenceStorage.isNotifyAboutHolidays)
+            GlobalScope.launch {
+                preferenceStorage.nextDayWithHolidays?.let { date ->
+                    holidayRepository.loadHolidays(date = date)
+                        .collect {
+                            when (it.status) {
+                                Status.SUCCESS -> {
+                                    it.data?.first()?.let { holiday ->
+                                        notificationRepository.createPush(
+                                            context = context,
+                                            notificationRepository.getData(
+                                                title = "${holiday.date}. ${holiday.title}",
+                                                body = holiday.description,
+                                                image = holiday.images?.first()?.url,
+                                                reasonNotification = ReasonNotification.HOLIDAY
+                                            )
                                         )
-                                    )
+                                    }
                                 }
+                            }
+                            loadNextDayWithHolidays(date = date)
+                        }
+                }
+            }
+        return Result.success()
+    }
+
+    private fun loadNextDayWithHolidays(date: String) {
+        GlobalScope.launch {
+            holidayRepository.loadNextDayWithHolidays(date = date)
+                .collect {
+                    when (it.status) {
+                        Status.SUCCESS -> {
+                            it.data?.dateString?.let { date ->
+                                preferenceStorage.nextDayWithHolidays = date
                             }
                         }
                     }
-            }
+                }
         }
-        return Result.success()
     }
 
     companion object {

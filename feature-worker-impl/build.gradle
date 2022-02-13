@@ -58,6 +58,8 @@ dependencies {
 
     implementation project(path: ':feature-photo-utils')
 
+    implementation project(path: ':feature-day-utils')
+
     implementation project(path: ':feature-network-impl')
 
     implementation project(path: ':common')

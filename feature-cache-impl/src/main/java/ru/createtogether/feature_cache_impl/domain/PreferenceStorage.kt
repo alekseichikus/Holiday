@@ -8,4 +8,5 @@ interface PreferenceStorage {
 
     var versionCode: String?
     var nextDayWithHolidays: String?
+    var isNotifyAboutHolidays: Boolean
 }

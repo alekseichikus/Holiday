@@ -44,5 +44,6 @@ class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceSt
     override var versionCode by Preferences.StringPreference(prefs, PREF_APP_VERSION_CODE, null)
 
     override var nextDayWithHolidays by Preferences.StringPreference(prefs, PREF_NEXT_DAY_WITH_HOLIDAYS, null)
+    override var isNotifyAboutHolidays by Preferences.BooleanPreference(prefs, PREF_NEXT_DAY_WITH_HOLIDAYS, true)
 
 }
