@@ -27,16 +27,6 @@ class CharacteristicView(context: Context) : FrameLayout(context) {
         setImage()
         setText()
         setDescription()
-        setBackground()
-    }
-
-    private fun setBackground() {
-        binding.root.setBackgroundResource(
-            if (position % 2 == 0)
-                R.color.backgroundContent
-            else
-                R.color.backgroundFill
-        )
     }
 
     private fun setImage() {

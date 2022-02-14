@@ -1,10 +1,7 @@
 package ru.createtogether.feature_worker_impl.di
 
 import android.content.Context
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +20,8 @@ object WorkerModule {
     fun runHolidayWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(HolidayWorker.TAG)
 
-        val refreshCpnWork = OneTimeWorkRequest.Builder(HolidayWorker::class.java)
-            .setInitialDelay(3, TimeUnit.SECONDS)
+        val refreshCpnWork = PeriodicWorkRequest.Builder(HolidayWorker::class.java, 1, TimeUnit.HOURS)
+            .setInitialDelay(1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .addTag(HolidayWorker.TAG)
             .build()

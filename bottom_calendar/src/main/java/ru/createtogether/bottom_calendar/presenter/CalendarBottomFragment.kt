@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import dagger.hilt.android.AndroidEntryPoint
+import ru.createtogether.birthday.imageCalendar.model.MonthModel
 import ru.createtogether.bottom_calendar.R
 import ru.createtogether.bottom_calendar.databinding.BottomDialogCalendarBinding
+import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.baseFragment.BaseBottomDialogFragment
 import java.util.*
 
@@ -30,6 +32,15 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
             dismiss()
         }
     }
+
+//    private fun initCalendarAdapter(months: List<MonthModel>){
+//        with(binding.rv){
+//            if(adapter == null)
+//                adapter = MonthAdapter(initMonths = months)
+//            else
+//                (adapter as AdapterActions).setData(months)
+//        }
+//    }
 
     private val time by lazy {
         requireArguments().getLong(PARAM_TIME)

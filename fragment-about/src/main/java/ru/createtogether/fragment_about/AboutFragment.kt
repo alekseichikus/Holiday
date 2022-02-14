@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.extension.onBack
 import ru.createtogether.common.helpers.extension.setPaddingTopMenu
+import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
 import ru.createtogether.fragment_about.databinding.FragmentAboutBinding
 import ru.createtogether.fragment_about.presenter.viewModel.AboutViewModel
 
@@ -20,12 +21,18 @@ class AboutFragment : BaseFragment(R.layout.fragment_about) {
     private val binding: FragmentAboutBinding by viewBinding()
 
     private val aboutViewModel: AboutViewModel by viewModels()
+    private val holidayViewModel: HolidayViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setVersion()
+        setHolidayNotifications()
         configureViews()
         initListeners()
+    }
+
+    private fun setHolidayNotifications(){
+        binding.swHolidayNotifications.isChecked = holidayViewModel.isNotifyAboutHolidays
     }
 
     private fun setVersion() {
@@ -40,6 +47,14 @@ class AboutFragment : BaseFragment(R.layout.fragment_about) {
         setCloseClick()
         setMailClick()
         setRateApp()
+
+        setNotifyAboutHolidaysCheckedChange()
+    }
+
+    private fun setNotifyAboutHolidaysCheckedChange(){
+        binding.swHolidayNotifications.setOnCheckedChangeListener { buttonView, isChecked ->
+            holidayViewModel.isNotifyAboutHolidays = isChecked
+        }
     }
 
     private fun setRateApp() {

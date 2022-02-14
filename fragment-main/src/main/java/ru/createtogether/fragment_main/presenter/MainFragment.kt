@@ -302,7 +302,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                 }
                 Status.SUCCESS -> {
                     it.data?.dateString?.let { date ->
-                        Log.d("sdasdsadsad", date)
                         holidayViewModel.nextDayWithHolidays = date
                     }
                     WorkerModule.runHolidayWorker(requireContext())

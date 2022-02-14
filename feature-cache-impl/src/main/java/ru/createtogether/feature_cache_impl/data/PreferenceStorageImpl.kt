@@ -15,6 +15,7 @@ class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceSt
         const val PREF_HOLIDAY_FAVORITES = "pref_holiday_favorites"
         const val PREF_APP_VERSION_CODE = "pref_app_version_code"
         const val PREF_NEXT_DAY_WITH_HOLIDAYS = "pref_next_day_with_holidays"
+        const val PREF_NOTIFY_ABOUT_HOLIDAYS = "pref_notify_about_holidays"
     }
 
     private val prefs =
@@ -44,6 +45,6 @@ class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceSt
     override var versionCode by Preferences.StringPreference(prefs, PREF_APP_VERSION_CODE, null)
 
     override var nextDayWithHolidays by Preferences.StringPreference(prefs, PREF_NEXT_DAY_WITH_HOLIDAYS, null)
-    override var isNotifyAboutHolidays by Preferences.BooleanPreference(prefs, PREF_NEXT_DAY_WITH_HOLIDAYS, true)
+    override var isNotifyAboutHolidays by Preferences.BooleanPreference(prefs, PREF_NOTIFY_ABOUT_HOLIDAYS, true)
 
 }

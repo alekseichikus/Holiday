@@ -11,12 +11,7 @@ class CharacteristicAdapter(
 ) : RecyclerView.Adapter<CharacteristicAdapter.CharacteristicViewHolder>(), AdapterActions {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        CharacteristicViewHolder(CharacteristicView(parent.context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        })
+        CharacteristicViewHolder(CharacteristicView(parent.context))
 
     override fun onBindViewHolder(holder: CharacteristicViewHolder, position: Int) {
         holder.bind(characteristic = characteristics[position], position = position)

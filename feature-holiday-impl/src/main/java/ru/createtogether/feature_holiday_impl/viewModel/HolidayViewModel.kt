@@ -36,6 +36,9 @@ class HolidayViewModel @Inject constructor(
     fun loadHolidaysById(holidays: Array<Int>) {
         viewModelScope.launch {
             holidayRepository.loadHolidaysByIds(holidays).collect {
+                it.data?.forEach {
+                    it.isLike = preferenceStorage.isHolidayLike(it.id)
+                }
                 holidaysByIdResponse.postValue(it)
             }
         }
@@ -73,5 +76,11 @@ class HolidayViewModel @Inject constructor(
         get() = preferenceStorage.nextDayWithHolidays
         set(value) {
             preferenceStorage.nextDayWithHolidays = value
+        }
+
+    var isNotifyAboutHolidays: Boolean
+        get() = preferenceStorage.isNotifyAboutHolidays
+        set(value) {
+            preferenceStorage.isNotifyAboutHolidays = value
         }
 }

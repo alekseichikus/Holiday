@@ -54,4 +54,6 @@ dependencies {
     implementation project(path: ':common')
 
     implementation project(path: ':feature-cache-impl')
+
+    implementation project(path: ':feature-holiday-impl')
 }
