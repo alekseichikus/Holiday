@@ -50,22 +50,22 @@ class InfoBoardView(context: Context, var attrs: AttributeSet?) : FrameLayout(co
     }
 
     private fun setTitle(text: String?) {
-        if (text == null)
-            binding.tvTitle.isVisible = false
+        binding.tvTitle.isVisible = text != null
         binding.tvTitle.text = text
     }
 
     private fun setText(text: String?) {
-        if (text == null)
-            binding.tvText.isVisible = false
+        binding.tvText.isVisible = text != null
         binding.tvText.text = text
     }
 
-    private fun setIcon(@DrawableRes icon: Int) {
-        binding.ivPreview.setImageResource(icon)
+    private fun setIcon(@DrawableRes icon: Int?) {
+        icon?.let {
+            binding.ivPreview.setImageResource(it)
+        }
     }
 
-    fun setContent(title: String, text: String, @DrawableRes icon: Int, @StringRes titleButton: Int? = null){
+    fun setContent(title: String, text: String, @DrawableRes icon: Int? = null, @StringRes titleButton: Int? = null){
         setTitle(title)
         setText(text)
         setIcon(icon)

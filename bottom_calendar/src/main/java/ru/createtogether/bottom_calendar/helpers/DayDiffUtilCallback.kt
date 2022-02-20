@@ -1,7 +1,7 @@
 package ru.createtogether.birthday.imageCalendar.helpers
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.createtogether.birthday.imageCalendar.model.DayModel
+import ru.createtogether.bottom_calendar.model.DayModel
 
 class DayDiffUtilCallback(
     private var oldList: List<DayModel>,
@@ -19,7 +19,7 @@ class DayDiffUtilCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldProduct = oldList[oldItemPosition]
         val newProduct = newList[newItemPosition]
-        return oldProduct == newProduct
+        return oldProduct.calendar == newProduct.calendar
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

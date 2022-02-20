@@ -9,4 +9,5 @@ interface HolidayRepository {
     fun loadHolidays(date: String): Flow<Event<List<HolidayModel>>>
     fun loadHolidaysByIds(holidays: Array<Int>): Flow<Event<List<HolidayModel>>>
     fun loadNextDayWithHolidays(date: String): Flow<Event<DayModel>>
+    fun loadHolidaysOfMonth(date: String): Flow<Event<List<DayModel>>>
 }

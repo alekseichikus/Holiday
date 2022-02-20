@@ -217,10 +217,10 @@
             android:backgroundTint="@color/backgroundButtonTransparentLight"
             android:foreground="@drawable/background_ripple_circle"
             android:padding="10dp"
-            android:src="@drawable/ic_share"
+            android:src="@drawable/ic_share_square"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textTertiary" />
+            app:tint="@color/textSecondary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

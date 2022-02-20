@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Event
+import ru.createtogether.common.helpers.Status
 import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
 import ru.createtogether.feature_day_utils.model.DayModel
 import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
@@ -59,6 +60,28 @@ class HolidayViewModel @Inject constructor(
             holidayRepository.loadNextDayWithHolidays(date = date).collect {
                 nextDateWithHolidaysResponse.postValue(it)
             }
+        }
+    }
+
+    var holidaysOfMonth = MutableLiveData<Event<List<DayModel>>>()
+    fun loadHolidaysOfMonth(dates: List<String>) {
+        viewModelScope.launch {
+            holidaysOfMonth.postValue(Event.loading())
+            val months = mutableListOf<DayModel>()
+
+            var isError = false
+            dates.forEach { date ->
+                holidayRepository.loadHolidaysOfMonth(date = date).collect {
+                    if (it.status == Status.SUCCESS && it.data.isNullOrEmpty().not())
+                        months.addAll(it.data!!)
+                    else if(it.status == Status.ERROR)
+                        isError = true
+                }
+            }
+            if(isError)
+                holidaysOfMonth.postValue(Event.error(0))
+            else
+                holidaysOfMonth.postValue(Event.success(months))
         }
     }
 

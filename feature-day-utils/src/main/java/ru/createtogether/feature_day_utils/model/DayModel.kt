@@ -4,5 +4,6 @@ import java.io.Serializable
 
 data class DayModel(
     var id: Int,
-    var dateString: String
+    var dateString: String,
+    var holidaysCount: Int
 ): Serializable

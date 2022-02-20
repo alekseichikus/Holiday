@@ -76,6 +76,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
                         progressBar.show()
                         infoBoardView.gone()
                         rvHolidaysShort.gone()
+                        ivSort.gone()
                     }
                 }
                 Status.SUCCESS -> {
@@ -92,6 +93,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
                         } else {
                             rvHolidaysShort.show()
                             infoBoardView.gone()
+                            ivSort.show()
                             initHolidaysAdapter(it.data!!)
                         }
                     }

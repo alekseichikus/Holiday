@@ -16,6 +16,7 @@ import ru.createtogether.common.helpers.MainActions
 import ru.createtogether.common.helpers.extension.onOpen
 import ru.createtogether.fragment_main.presenter.MainFragment
 import ru.createtogether.fragment_main.presenter.viewModel.MainViewModel
+import java.lang.Exception
 
 
 @AndroidEntryPoint

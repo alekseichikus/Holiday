@@ -19,4 +19,7 @@ interface HolidayApi {
 
     @POST("/holidays")
     suspend fun loadHolidaysByIds(@Body holidayByIdsRequest: HolidayByIdsRequest): Response<List<HolidayModel>>
+
+    @GET("/holidays/{date}/holidays_of_month_preview")
+    suspend fun loadHolidaysOfMonth(@Path("date") date: String): Response<List<DayModel>>
 }

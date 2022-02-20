@@ -302,8 +302,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_box_full" />
-                            <entry key="sourceFile" value="C:\Users\Aleksei\Desktop\myvooz\svgs\solid\box-full.svg" />
+                            <entry key="outputName" value="ic_share_square" />
+                            <entry key="sourceFile" value="C:\Users\Aleksei\Desktop\myvooz\svgs\solid\share-square.svg" />
                           </map>
                         </option>
                       </PersistentState>

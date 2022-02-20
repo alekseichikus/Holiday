@@ -1,7 +1,6 @@
 package ru.createtogether.birthday.imageCalendar.helpers
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.createtogether.birthday.imageCalendar.model.DayModel
 import ru.createtogether.birthday.imageCalendar.model.MonthModel
 
 class MonthDiffUtilCallback(
