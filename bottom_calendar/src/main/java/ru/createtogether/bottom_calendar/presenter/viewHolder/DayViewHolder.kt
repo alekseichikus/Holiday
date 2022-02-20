@@ -45,7 +45,7 @@ class DayViewHolder(
             ColorStateList.valueOf(
                 ContextCompat.getColor(
                     context,
-                    if (day.isToday) R.color.textTertiary else R.color.backgroundContent
+                    if (day.isToday) R.color.textLink else R.color.backgroundContent
                 )
             )
     }
