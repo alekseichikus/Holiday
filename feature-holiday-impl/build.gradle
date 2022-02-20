@@ -55,6 +55,8 @@ dependencies {
     implementation project(path: ':feature-holiday-utils')
     implementation project(path: ':feature-holiday-api')
 
+    implementation project(path: ':feature-cache-impl')
+
     implementation project(path: ':common')
 
     //Retrofit

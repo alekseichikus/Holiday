@@ -1,8 +1,6 @@
 package ru.createtogether.feature_holiday_impl.data
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
@@ -54,6 +52,20 @@ class HolidayRepositoryImpl @Inject constructor(
         emit(Event.loading())
 
         val apiResponse = holidayApi.loadNextDayWithHolidays(date)
+        if (apiResponse.isSuccessful && apiResponse.body() != null) {
+            emit(Event.success(apiResponse.body()))
+            return@flow
+        }
+        val errorMessage = withContext(Dispatchers.IO) { apiResponse.errorBody()?.string() }
+        emit(Event.error(errorHandlerRepository.handleErrorMessage(errorMessage)))
+    }.catch { e ->
+        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
+    }
+
+    override fun loadHolidaysOfMonth(date: String) = flow {
+        emit(Event.loading())
+
+        val apiResponse = holidayApi.loadHolidaysOfMonth(date)
         if (apiResponse.isSuccessful && apiResponse.body() != null) {
             emit(Event.success(apiResponse.body()))
             return@flow

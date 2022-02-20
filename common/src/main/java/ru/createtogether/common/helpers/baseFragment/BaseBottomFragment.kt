@@ -10,7 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.createtogether.common.R
-import ru.createtogether.common.helpers.baseFragment.extension.hideKeyboard
+import ru.createtogether.common.helpers.extension.hideKeyboard
 
 abstract class BaseBottomFragment(@LayoutRes val contentLayoutId: Int) : BottomSheetDialogFragment() {
 

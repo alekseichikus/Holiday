@@ -3,5 +3,10 @@
     <style name="Theme.Holiday" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:colorEdgeEffect">@color/textTertiary</item>
+
+        <item name="colorPrimary">@color/textLink</item>
+        <item name="colorPrimaryDark">@color/textLink</item>
+        <item name="colorAccent">@color/textLink</item>
     </style>
 </resources>
