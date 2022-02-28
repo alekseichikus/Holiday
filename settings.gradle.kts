@@ -1,0 +1,33 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven(url = "https://jitpack.io")
+    }
+}
+rootProject.name = "Holiday"
+include(Modules.app)
+include(":common")
+include(":feature-day-utils")
+include(":feature-holiday-api")
+include(":feature-holiday-utils")
+include(":feature-network-impl")
+include(":feature-photo-utils")
+include(":feature-country-utils")
+include(":feature-holiday-impl")
+include(":fragment-main")
+include(":feature-cache-impl")
+include(":feature-day-utils")
+include(":feature-holiday")
+include(":feature-photo")
+include(":feature-info-board")
+include(":fragment-about")
+include(":fragment-photo")
+include(":fragment-favorite")
+include(":fragment-holiday")
+include(":feature-characteristic-utils")
+include(":feature-characteristic")
+include(":bottom_calendar")
+include(":feature-worker-impl")
+include(":feature-notification-impl")

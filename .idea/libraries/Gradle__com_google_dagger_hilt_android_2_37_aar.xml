@@ -2,8 +2,8 @@
   <library name="Gradle: com.google.dagger:hilt-android:2.37@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7e9035d113132bebc9f719b4b23f5968/transformed/jetified-hilt-android-2.37/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9a9ac6603aff493b4f067a29fe6dc644/transformed/jetified-hilt-android-2.37/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9a9ac6603aff493b4f067a29fe6dc644/transformed/jetified-hilt-android-2.37/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/9a9ac6603aff493b4f067a29fe6dc644/transformed/jetified-hilt-android-2.37/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/9a9ac6603aff493b4f067a29fe6dc644/transformed/jetified-hilt-android-2.37/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
