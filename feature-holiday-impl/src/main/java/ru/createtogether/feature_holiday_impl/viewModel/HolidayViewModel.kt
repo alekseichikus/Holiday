@@ -10,7 +10,7 @@ import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
 import ru.createtogether.feature_day_utils.model.DayModel
-import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
+import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 

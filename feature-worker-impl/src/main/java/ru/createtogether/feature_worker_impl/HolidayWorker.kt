@@ -1,7 +1,6 @@
 package ru.createtogether.feature_worker_impl
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -13,13 +12,11 @@ import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.extension.withPattern
 import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
-import ru.createtogether.feature_holiday_impl.data.HolidayRepositoryImpl
-import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
+import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_notification_impl.domain.BasePushNotificationRepository
 import ru.createtogether.feature_notification_impl.helpers.ReasonNotification
 import ru.createtogether.feature_worker_impl.di.WorkerModule
 import java.util.*
-import javax.inject.Inject
 
 @HiltWorker
 class HolidayWorker @AssistedInject constructor(

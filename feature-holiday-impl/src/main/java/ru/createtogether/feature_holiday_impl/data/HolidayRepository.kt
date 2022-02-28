@@ -1,4 +1,4 @@
-package ru.createtogether.feature_holiday_impl.domain
+package ru.createtogether.feature_holiday_impl.data
 
 import kotlinx.coroutines.flow.Flow
 import ru.createtogether.common.helpers.Event
