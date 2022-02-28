@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
 import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.MainActions
@@ -167,40 +170,42 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
     }
 
     private fun observeLoadHolidaysOfDay() {
-        holidayViewModel.holidaysOfDayResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
+        lifecycleScope.launch {
+            holidayViewModel.holidaysOfDayResponse.collect {
+                when (it.status) {
+                    Status.LOADING -> {
+                        setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
 
-                    showShimmers(isShow = true)
-                    hideContent()
-                    binding.ivCalendar.isEnabled = false
-                }
-                Status.SUCCESS -> {
-                    it.data?.let { holidays ->
-                        if (holidays.isEmpty())
-                            mainViewModel.currentDate.let { date ->
-                                holidayViewModel.loadNextDateWithHolidays(
-                                    Utils.convertDateToDateString(
-                                        date
+                        showShimmers(isShow = true)
+                        hideContent()
+                        binding.ivCalendar.isEnabled = false
+                    }
+                    Status.SUCCESS -> {
+                        it.data?.let { holidays ->
+                            if (holidays.isEmpty())
+                                mainViewModel.currentDate.let { date ->
+                                    holidayViewModel.loadNextDateWithHolidays(
+                                        Utils.convertDateToDateString(
+                                            date
+                                        )
                                     )
-                                )
+                                }
+                            else {
+                                setContent(holidays = holidays)
+                                showShimmers(isShow = false)
+                                binding.ivCalendar.isEnabled = true
                             }
-                        else {
-                            setContent(holidays = holidays)
+                        } ?: run {
                             showShimmers(isShow = false)
                             binding.ivCalendar.isEnabled = true
+                            showTechSupportError()
                         }
-                    } ?: run {
+                    }
+                    Status.ERROR -> {
                         showShimmers(isShow = false)
                         binding.ivCalendar.isEnabled = true
-                        showTechSupportError()
+                        showInternetError()
                     }
-                }
-                Status.ERROR -> {
-                    showShimmers(isShow = false)
-                    binding.ivCalendar.isEnabled = true
-                    showInternetError()
                 }
             }
         }

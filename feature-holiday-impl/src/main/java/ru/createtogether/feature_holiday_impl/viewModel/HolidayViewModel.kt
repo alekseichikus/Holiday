@@ -4,13 +4,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
 import ru.createtogether.feature_day_utils.model.DayModel
-import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
+import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 
@@ -20,17 +23,22 @@ class HolidayViewModel @Inject constructor(
     private val holidayRepository: HolidayRepository
 ) : ViewModel() {
 
-    var holidaysOfDayResponse = MutableLiveData<Event<List<HolidayModel>>>()
+    private val holidaysOfDay = MutableStateFlow<Event<List<HolidayModel>>>(Event.loading())
+    val holidaysOfDayResponse: StateFlow<Event<List<HolidayModel>>> = holidaysOfDay.asStateFlow()
+
     fun loadHolidaysOfDay(date: String) {
-        holidaysOfDayResponse.postValue(Event.loading())
         viewModelScope.launch {
-            holidayRepository.loadHolidays(date = date).collect {
-                it.data?.forEach {
-                    it.isLike = preferenceStorage.isHolidayLike(it.id)
+            runCatching {
+                holidayRepository.loadHolidays(date = date).collect {
+                    holidaysOfDay.value = it
                 }
-                holidaysOfDayResponse.postValue(it)
             }
+                .onFailure {
+                    holidaysOfDay.value = Event.Companion.error(it)
+                }
         }
+
+
     }
 
     var holidaysByIdResponse = MutableLiveData<Event<List<HolidayModel>>>()
@@ -74,11 +82,11 @@ class HolidayViewModel @Inject constructor(
                 holidayRepository.loadHolidaysOfMonth(date = date).collect {
                     if (it.status == Status.SUCCESS && it.data.isNullOrEmpty().not())
                         months.addAll(it.data!!)
-                    else if(it.status == Status.ERROR)
+                    else if (it.status == Status.ERROR)
                         isError = true
                 }
             }
-            if(isError)
+            if (isError)
                 holidaysOfMonth.postValue(Event.error(0))
             else
                 holidaysOfMonth.postValue(Event.success(months))

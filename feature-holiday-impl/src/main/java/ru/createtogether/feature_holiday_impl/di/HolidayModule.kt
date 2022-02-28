@@ -3,10 +3,9 @@ package ru.createtogether.feature_holiday_impl.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import ru.createtogether.feature_holiday_impl.data.HolidayRepositoryImpl
-import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
+import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_holiday_api.api.HolidayApi
 import ru.createtogether.feature_network_impl.domain.ErrorHandlerRepository
 
