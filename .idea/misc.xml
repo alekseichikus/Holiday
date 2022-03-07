@@ -36,6 +36,8 @@
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/common/src/main/res/layout/item_drop_down.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/common/src/main/res/menu/popup_sort.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/fragment-main/src/main/res/layout/fragment_main.xml" value="0.18854166666666666" />
+        <entry key="feature-holiday/src/main/res/layout/view_holiday.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/view_holidays_of_current_day_empty.xml" value="0.1" />
         <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.1765625" />
         <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.21014492753623187" />
       </map>

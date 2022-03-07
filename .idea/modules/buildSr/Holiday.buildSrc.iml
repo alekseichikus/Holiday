@@ -25,26 +25,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: gradle-api-7.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-ant-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-astbuilder-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-console-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-datetime-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-dateutil-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-groovydoc-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-json-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-nio-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-sql-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-templates-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-test-3.0.7" level="project" />
-    <orderEntry type="library" name="Gradle: groovy-xml-3.0.7" level="project" />
+    <orderEntry type="library" name="Gradle: gradle-api-7.4" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-ant-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-astbuilder-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-console-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-datetime-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-dateutil-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-groovydoc-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-json-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-nio-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-sql-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-templates-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-test-3.0.9" level="project" />
+    <orderEntry type="library" name="Gradle: groovy-xml-3.0.9" level="project" />
     <orderEntry type="library" name="Gradle: javaparser-core-3.17.0" level="project" />
-    <orderEntry type="library" name="Gradle: kotlin-stdlib-1.4.31" level="project" />
-    <orderEntry type="library" name="Gradle: kotlin-stdlib-common-1.4.31" level="project" />
-    <orderEntry type="library" name="Gradle: kotlin-stdlib-jdk7-1.4.31" level="project" />
-    <orderEntry type="library" name="Gradle: kotlin-stdlib-jdk8-1.4.31" level="project" />
-    <orderEntry type="library" name="Gradle: kotlin-reflect-1.4.31" level="project" />
-    <orderEntry type="library" name="Gradle: gradle-installation-beacon-7.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: kotlin-stdlib-1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: kotlin-stdlib-common-1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: kotlin-stdlib-jdk7-1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: kotlin-stdlib-jdk8-1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: kotlin-reflect-1.5.31" level="project" />
+    <orderEntry type="library" name="Gradle: gradle-installation-beacon-7.4" level="project" />
   </component>
 </module>

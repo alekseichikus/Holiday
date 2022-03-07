@@ -7,7 +7,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Holiday"
-include(Modules.app)
+include(":app")
 include(":common")
 include(":feature-day-utils")
 include(":feature-holiday-api")
@@ -31,3 +31,5 @@ include(":feature-characteristic")
 include(":bottom_calendar")
 include(":feature-worker-impl")
 include(":feature-notification-impl")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
