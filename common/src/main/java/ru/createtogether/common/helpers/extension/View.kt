@@ -16,6 +16,7 @@ import ru.createtogether.common.R
 import ru.createtogether.common.helpers.Utils
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.contracts.contract
 
 fun View.setPaddingTopMenu() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -125,3 +126,5 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
             R.anim.fragment_fade_exit
         ).commit()
 }
+
+inline fun <T> Collection<T>?.isNotNull()  = this != null

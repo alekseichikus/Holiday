@@ -22,13 +22,16 @@ class HolidayViewModel @Inject constructor(
 
     var holidaysOfDayResponse = MutableLiveData<Event<List<HolidayModel>>>()
     fun loadHolidaysOfDay(date: String) {
-        holidaysOfDayResponse.postValue(Event.loading())
         viewModelScope.launch {
-            holidayRepository.loadHolidays(date = date).collect {
-                it.data?.forEach {
-                    it.isLike = preferenceStorage.isHolidayLike(it.id)
+            runCatching {
+                holidayRepository.loadHolidays(date = date).collect {
+                    it.data?.forEach {
+                        it.isLike = preferenceStorage.isHolidayLike(it.id)
+                    }
+                    holidaysOfDayResponse.postValue(it)
                 }
-                holidaysOfDayResponse.postValue(it)
+            }.onFailure { throwable ->
+                holidaysOfDayResponse.postValue(Event.error(throwable = throwable))
             }
         }
     }
@@ -74,11 +77,11 @@ class HolidayViewModel @Inject constructor(
                 holidayRepository.loadHolidaysOfMonth(date = date).collect {
                     if (it.status == Status.SUCCESS && it.data.isNullOrEmpty().not())
                         months.addAll(it.data!!)
-                    else if(it.status == Status.ERROR)
+                    else if (it.status == Status.ERROR)
                         isError = true
                 }
             }
-            if(isError)
+            if (isError)
                 holidaysOfMonth.postValue(Event.error(0))
             else
                 holidaysOfMonth.postValue(Event.success(months))
