@@ -6,18 +6,18 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
 
     defaultConfig {
         minSdkVersion(21)
-        targetSdkVersion(31)
+        targetSdk = 31
 
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildFeatures {
-        viewBinding = true
+        dataBinding = true
     }
 
     buildTypes {

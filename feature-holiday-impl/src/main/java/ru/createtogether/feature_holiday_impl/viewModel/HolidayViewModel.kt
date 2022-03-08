@@ -7,15 +7,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Event
-import ru.createtogether.common.helpers.Status
-import ru.createtogether.feature_cache_impl.domain.PreferenceStorage
 import ru.createtogether.feature_day_utils.model.DayModel
 import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HolidayViewModel @Inject constructor(private val holidayRepository: HolidayRepository
+class HolidayViewModel @Inject constructor(
+    private val holidayRepository: HolidayRepository
 ) : ViewModel() {
 
     var holidaysOfDayResponse = MutableLiveData<Event<List<HolidayModel>>>()
@@ -23,7 +22,6 @@ class HolidayViewModel @Inject constructor(private val holidayRepository: Holida
         viewModelScope.launch {
             runCatching {
                 holidayRepository.loadHolidays(date = date).collect {
-
                     holidaysOfDayResponse.postValue(it)
                 }
             }.onFailure { throwable ->
@@ -35,52 +33,39 @@ class HolidayViewModel @Inject constructor(private val holidayRepository: Holida
     var holidaysByIdResponse = MutableLiveData<Event<List<HolidayModel>>>()
     fun loadHolidaysById(holidays: Array<Int>) {
         viewModelScope.launch {
-            holidayRepository.loadHolidaysByIds(holidays).collect {
-                it.data?.forEach {
-                    it.isLike = holidayRepository.isFavorite(it.id)
+            runCatching {
+                holidayRepository.loadHolidaysById(holidays = holidays).collect {
+                    holidaysByIdResponse.postValue(it)
                 }
-                holidaysByIdResponse.postValue(it)
-            }
-        }
-    }
-
-    var nextDayWithHolidaysResponse = MutableLiveData<Event<DayModel>>()
-    fun loadNextDateWithHolidays(date: String) {
-        viewModelScope.launch {
-            holidayRepository.loadNextDayWithHolidays(date = date).collect {
-                nextDayWithHolidaysResponse.postValue(it)
+            }.onFailure { throwable ->
+                holidaysByIdResponse.postValue(Event.error(throwable = throwable))
             }
         }
     }
 
     var nextDateWithHolidaysResponse = MutableLiveData<Event<DayModel>>()
-    fun loadNextDayWithHolidays(date: String) {
+    fun loadNextDateWithHolidays(date: String) {
         viewModelScope.launch {
-            holidayRepository.loadNextDayWithHolidays(date = date).collect {
-                nextDateWithHolidaysResponse.postValue(it)
+            runCatching {
+                holidayRepository.loadNextDateWithHolidays(date = date).collect {
+                    nextDateWithHolidaysResponse.postValue(it)
+                }
+            }.onFailure { throwable ->
+                nextDateWithHolidaysResponse.postValue(Event.error(throwable = throwable))
             }
         }
     }
 
     var holidaysOfMonth = MutableLiveData<Event<List<DayModel>>>()
-    fun loadHolidaysOfMonth(dates: List<String>) {
+    fun loadHolidaysOfMonth(date: String) {
         viewModelScope.launch {
-            holidaysOfMonth.postValue(Event.loading())
-            val months = mutableListOf<DayModel>()
-
-            var isError = false
-            dates.forEach { date ->
+            runCatching {
                 holidayRepository.loadHolidaysOfMonth(date = date).collect {
-                    if (it.status == Status.SUCCESS && it.data.isNullOrEmpty().not())
-                        months.addAll(it.data!!)
-                    else if (it.status == Status.ERROR)
-                        isError = true
+                    holidaysOfMonth.postValue(it)
                 }
+            }.onFailure { throwable ->
+                holidaysOfMonth.postValue(Event.error(throwable = throwable))
             }
-            if (isError)
-                holidaysOfMonth.postValue(Event.error(0))
-            else
-                holidaysOfMonth.postValue(Event.success(months))
         }
     }
 

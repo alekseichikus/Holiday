@@ -32,7 +32,7 @@ import java.util.*
 
 
 @AndroidEntryPoint
-class MainFragment : BaseFragment(R.layout.fragment_main) {
+class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     private val binding: FragmentMainBinding by viewBinding()
     private val holidayViewModel: HolidayViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels()
@@ -44,7 +44,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         initObservers()
 
         loadHolidaysOfDay()
-        holidayViewModel.loadNextDayWithHolidays(mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN))
+        holidayViewModel.loadNextDateWithHolidays(mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN))
     }
 
     private fun configureViews() {
@@ -279,7 +279,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
     }
 
     private fun observeLoadNextDayWithHolidays() {
-        holidayViewModel.nextDayWithHolidaysResponse.observe(viewLifecycleOwner) {
+        holidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
                     setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })

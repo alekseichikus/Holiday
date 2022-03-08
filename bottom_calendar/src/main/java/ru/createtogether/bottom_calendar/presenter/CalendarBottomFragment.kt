@@ -142,15 +142,13 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
                 Status.SUCCESS -> {
                     it.data?.let {
                         holidayViewModel.loadHolidaysOfMonth(
-                            listOf(
-                                Calendar.getInstance().apply {
-                                    timeInMillis = this@CalendarBottomFragment.time
-                                    set(
-                                        Calendar.DAY_OF_MONTH,
-                                        1
-                                    )
-                                }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
-                            )
+                            Calendar.getInstance().apply {
+                                timeInMillis = this@CalendarBottomFragment.time
+                                set(
+                                    Calendar.DAY_OF_MONTH,
+                                    1
+                                )
+                            }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
                         )
                     }
                 }

@@ -1,149 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/backgroundFill"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:theme="@style/Theme.Holiday">
-
-    <LinearLayout
-        android:id="@+id/llToolbar"
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:background="@drawable/background_circle"
-            android:backgroundTint="@color/backgroundContent"
-            android:foreground="@drawable/background_ripple_circle"
-            android:padding="10dp"
-            android:src="@drawable/ic_times"
-            app:tint="@color/textTertiary" />
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_logo_container"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
-        app:cardBackgroundColor="@color/backgroundContent"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="1dp">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo" />
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        style="@style/TextDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/app_name" />
-
-    <TextView
-        android:id="@+id/tv_version"
-        style="@style/TextDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        tools:text="Версия 1.0" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/background_border"
-        android:backgroundTint="@color/backgroundContent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundFill"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:theme="@style/Theme.Holiday">
 
-        <TextView
-            style="@style/TextTitle"
+        <LinearLayout
+            android:id="@+id/llToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/support" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivClose"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:background="@drawable/background_circle"
+                android:backgroundTint="@color/backgroundContent"
+                android:foreground="@drawable/background_ripple_circle"
+                android:padding="10dp"
+                android:src="@drawable/ic_times"
+                app:tint="@color/textTertiary" />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_logo_container"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/backgroundContent"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="1dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             style="@style/TextDefault"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/support_description" />
+            android:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/tv_version"
+            style="@style/TextDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Версия 1.0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/background_border"
+            android:backgroundTint="@color/backgroundContent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/TextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/support" />
+
+            <TextView
+                style="@style/TextDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/support_description" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mbMail"
+                style="@style/Button.Base.Gray"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/feedback"
+                app:icon="@drawable/ic_comments"
+                app:iconGravity="textStart" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/background_border_8"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvNotificationTitle"
+                style="@style/TextDefault"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/notify_about_holidays"
+                app:layout_constraintEnd_toStartOf="@+id/swHolidayNotifications"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                style="@style/TextDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/notify_about_holidays_description"
+                app:layout_constraintEnd_toStartOf="@+id/swHolidayNotifications"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvNotificationTitle" />
+
+            <Switch
+                android:id="@+id/swHolidayNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/mbMail"
+            android:id="@+id/mbRateApp"
             style="@style/Button.Base.Gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/feedback"
-            app:icon="@drawable/ic_comments"
-            app:iconGravity="textStart" />
+            android:layout_marginHorizontal="16dp"
+            android:gravity="start"
+            android:text="@string/rate_app"
+            android:textAlignment="viewStart"
+            android:textColor="@color/textPrimary"
+            app:backgroundTint="@color/backgroundContent"
+            app:icon="@drawable/ic_star"
+            app:iconGravity="start"
+            app:iconTint="@color/textLink" />
     </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/background_border_8"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/tvNotificationTitle"
-            style="@style/TextDefault"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/notify_about_holidays"
-            app:layout_constraintEnd_toStartOf="@+id/swHolidayNotifications"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            style="@style/TextDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/notify_about_holidays_description"
-            app:layout_constraintEnd_toStartOf="@+id/swHolidayNotifications"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNotificationTitle" />
-
-        <Switch
-            android:id="@+id/swHolidayNotifications"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mbRateApp"
-        style="@style/Button.Base.Gray"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:gravity="start"
-        android:text="@string/rate_app"
-        android:textAlignment="viewStart"
-        android:textColor="@color/textPrimary"
-        app:backgroundTint="@color/backgroundContent"
-        app:icon="@drawable/ic_star"
-        app:iconGravity="start"
-        app:iconTint="@color/textLink" />
-</LinearLayout>
+</layout>

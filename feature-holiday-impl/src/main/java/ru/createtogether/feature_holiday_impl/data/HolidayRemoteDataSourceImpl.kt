@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import ru.createtogether.common.helpers.extension.isNotNull
 import ru.createtogether.feature_holiday_api.api.HolidayApi
-import ru.createtogether.feature_holiday_utils.model.HolidayByIdsRequest
+import ru.createtogether.feature_holiday_utils.model.HolidaysByIdRequest
 import javax.inject.Inject
 
 class HolidayRemoteDataSourceImpl @Inject constructor(private val holidayApi: HolidayApi) :
@@ -13,12 +13,12 @@ class HolidayRemoteDataSourceImpl @Inject constructor(private val holidayApi: Ho
         emit(responseProcessing(holidayApi.loadHolidays(date = date)))
     }
 
-    override suspend fun loadHolidaysByIds(holidaysId: List<Int>) = flow {
-        val holidayByIdsRequest = HolidayByIdsRequest(holidaysId)
-        emit(responseProcessing(holidayApi.loadHolidaysByIds(holidayByIdsRequest = holidayByIdsRequest)))
+    override suspend fun loadHolidaysById(holidaysId: Array<Int>) = flow {
+        val holidayByIdsRequest = HolidaysByIdRequest(holidaysId.toList())
+        emit(responseProcessing(holidayApi.loadHolidaysByIds(holidaysByIdRequest = holidayByIdsRequest)))
     }
 
-    override suspend fun loadNextDayWithHolidays(date: String) = flow {
+    override suspend fun loadNextDateWithHolidays(date: String) = flow {
         emit(responseProcessing(holidayApi.loadNextDateWithHolidays(date = date)))
     }
 
