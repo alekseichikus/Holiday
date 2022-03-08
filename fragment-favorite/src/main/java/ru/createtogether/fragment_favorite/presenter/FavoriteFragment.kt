@@ -37,7 +37,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
     }
 
     private fun loadHolidayByIds() {
-        holidayViewModel.loadHolidaysById(holidayViewModel.getHolidaysLike())
+        holidayViewModel.loadHolidaysById(holidayViewModel.getFavorites())
     }
 
     private fun configureViews() {
@@ -147,7 +147,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
         if (holidayResponse.isLike)
             holidayViewModel.addHolidayLike(holidayResponse.id)
         else
-            holidayViewModel.removeHolidayLike(holidayResponse.id)
+            holidayViewModel.removeFavorite(holidayResponse.id)
     }
 
     private fun openLongClick(holiday: HolidayModel) {
@@ -164,7 +164,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
                 0 -> openClick(holiday = holiday)
 
                 1 -> {
-                    holidayViewModel.removeHolidayLike(holiday.id)
+                    holidayViewModel.removeFavorite(holiday.id)
                     holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.filter { it.id != holiday.id }))
                 }
             }

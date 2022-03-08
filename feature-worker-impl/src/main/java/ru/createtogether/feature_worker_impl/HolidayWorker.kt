@@ -28,9 +28,9 @@ class HolidayWorker @AssistedInject constructor(
 ) : Worker(context, params) {
 
     override fun doWork(): Result {
-        if (preferenceStorage.isNotifyAboutHolidays)
+        if (holidayRepository.isNotifyAboutHolidays)
             GlobalScope.launch {
-                preferenceStorage.nextDayWithHolidays?.let { date ->
+                holidayRepository.nextDateWithHolidays?.let { date ->
                     val calendar = Calendar.getInstance()
                     if(calendar.time.withPattern(Constants.DEFAULT_DATE_PATTERN) == date){
                         if(calendar.get(Calendar.HOUR_OF_DAY) in 9..14){
@@ -67,7 +67,7 @@ class HolidayWorker @AssistedInject constructor(
                     when (it.status) {
                         Status.SUCCESS -> {
                             it.data?.dateString?.let { date ->
-                                preferenceStorage.nextDayWithHolidays = date
+                                holidayRepository.nextDateWithHolidays = date
                                 WorkerModule.runHolidayWorker(context = context)
                             }
                         }

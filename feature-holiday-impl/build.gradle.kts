@@ -46,6 +46,8 @@ dependencies {
 
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
 
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     //hilt
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-compiler:2.37")

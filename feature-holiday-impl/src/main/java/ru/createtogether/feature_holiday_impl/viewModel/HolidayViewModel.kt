@@ -15,9 +15,7 @@ import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HolidayViewModel @Inject constructor(
-    private val preferenceStorage: PreferenceStorage,
-    private val holidayRepository: HolidayRepository
+class HolidayViewModel @Inject constructor(private val holidayRepository: HolidayRepository
 ) : ViewModel() {
 
     var holidaysOfDayResponse = MutableLiveData<Event<List<HolidayModel>>>()
@@ -25,9 +23,7 @@ class HolidayViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 holidayRepository.loadHolidays(date = date).collect {
-                    it.data?.forEach {
-                        it.isLike = preferenceStorage.isHolidayLike(it.id)
-                    }
+
                     holidaysOfDayResponse.postValue(it)
                 }
             }.onFailure { throwable ->
@@ -41,7 +37,7 @@ class HolidayViewModel @Inject constructor(
         viewModelScope.launch {
             holidayRepository.loadHolidaysByIds(holidays).collect {
                 it.data?.forEach {
-                    it.isLike = preferenceStorage.isHolidayLike(it.id)
+                    it.isLike = holidayRepository.isFavorite(it.id)
                 }
                 holidaysByIdResponse.postValue(it)
             }
@@ -88,25 +84,25 @@ class HolidayViewModel @Inject constructor(
         }
     }
 
-    fun getHolidaysLike() = preferenceStorage.getHolidayLikes()
+    fun getFavorites() = holidayRepository.getFavorites()
 
     fun addHolidayLike(id: Int) {
-        preferenceStorage.addHolidayLikes(id)
+        holidayRepository.addFavorite(id)
     }
 
-    fun removeHolidayLike(id: Int) {
-        preferenceStorage.removeHolidayLikes(id)
+    fun removeFavorite(id: Int) {
+        holidayRepository.removeFavorite(id)
     }
 
     var nextDayWithHolidays: String?
-        get() = preferenceStorage.nextDayWithHolidays
+        get() = holidayRepository.nextDateWithHolidays
         set(value) {
-            preferenceStorage.nextDayWithHolidays = value
+            holidayRepository.nextDateWithHolidays = value
         }
 
     var isNotifyAboutHolidays: Boolean
-        get() = preferenceStorage.isNotifyAboutHolidays
+        get() = holidayRepository.isNotifyAboutHolidays
         set(value) {
-            preferenceStorage.isNotifyAboutHolidays = value
+            holidayRepository.isNotifyAboutHolidays = value
         }
 }

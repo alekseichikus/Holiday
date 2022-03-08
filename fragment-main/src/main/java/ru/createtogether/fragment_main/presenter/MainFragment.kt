@@ -144,7 +144,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         if (holiday.isLike)
             holidayViewModel.addHolidayLike(holiday.id)
         else
-            holidayViewModel.removeHolidayLike(holiday.id)
+            holidayViewModel.removeFavorite(holiday.id)
     }
 
     private fun loadHolidaysOfDay() {

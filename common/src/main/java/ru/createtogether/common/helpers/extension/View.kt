@@ -127,4 +127,4 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
         ).commit()
 }
 
-inline fun <T> Collection<T>?.isNotNull()  = this != null
+inline fun <T> T.isNotNull()  = this != null

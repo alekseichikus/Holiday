@@ -15,7 +15,7 @@ interface HolidayApi {
     suspend fun loadHolidays(@Path("date") date: String): Response<List<HolidayModel>>
 
     @GET("/holidays/{date}/nearest_holiday_day")
-    suspend fun loadNextDayWithHolidays(@Path("date") date: String): Response<DayModel>
+    suspend fun loadNextDateWithHolidays(@Path("date") date: String): Response<DayModel>
 
     @POST("/holidays")
     suspend fun loadHolidaysByIds(@Body holidayByIdsRequest: HolidayByIdsRequest): Response<List<HolidayModel>>

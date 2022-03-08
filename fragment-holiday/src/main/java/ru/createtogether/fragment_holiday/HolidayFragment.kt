@@ -85,7 +85,7 @@ class HolidayFragment : BaseBottomDialogFragment(R.layout.fragment_holiday) {
                 if (isLike)
                     holidayViewModel.addHolidayLike(id)
                 else
-                    holidayViewModel.removeHolidayLike(id)
+                    holidayViewModel.removeFavorite(id)
                 setLike()
             }
         }
