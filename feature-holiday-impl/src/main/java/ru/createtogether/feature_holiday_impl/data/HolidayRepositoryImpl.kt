@@ -24,8 +24,7 @@ class HolidayRepositoryImpl @Inject constructor(
                 Event.success(response.body())
             else
                 throw IllegalArgumentException()
-        }
-            .onFailure {  }
+        }.onFailure { throw it }
     }
 
     override fun loadHolidaysByIds(holidays: Array<Int>) = flow {

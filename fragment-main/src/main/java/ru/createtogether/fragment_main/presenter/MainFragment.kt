@@ -1,11 +1,11 @@
 package ru.createtogether.fragment_main.presenter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.work.*
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
 import ru.createtogether.common.helpers.AdapterActions
@@ -19,7 +19,6 @@ import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
 import ru.createtogether.feature_photo_utils.PhotoModel
-import ru.createtogether.feature_worker_impl.HolidayWorker
 import ru.createtogether.feature_worker_impl.di.WorkerModule
 import ru.createtogether.fragment_about.AboutFragment
 import ru.createtogether.fragment_favorite.presenter.FavoriteFragment
@@ -28,8 +27,8 @@ import ru.createtogether.fragment_main.R
 import ru.createtogether.fragment_main.databinding.FragmentMainBinding
 import ru.createtogether.fragment_main.presenter.viewModel.MainViewModel
 import ru.createtogether.fragment_photo.presenter.PhotoFragment
+import java.lang.IllegalArgumentException
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -172,7 +171,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                 Status.LOADING -> {
                     setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
 
-                    showShimmers(isShow = true)
+                    showShimmers()
                     hideContent()
                     binding.ivCalendar.isEnabled = false
                 }
@@ -188,49 +187,63 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                             }
                         else {
                             setContent(holidays = holidays)
-                            showShimmers(isShow = false)
+                            hideShimmers()
                             binding.ivCalendar.isEnabled = true
                         }
                     } ?: run {
-                        showShimmers(isShow = false)
+                        hideShimmers()
                         binding.ivCalendar.isEnabled = true
-                        showTechSupportError()
+                        showInfoBoardSupportError()
                     }
                 }
                 Status.ERROR -> {
-                    showShimmers(isShow = false)
+                    hideShimmers()
                     binding.ivCalendar.isEnabled = true
-                    showInternetError()
+                    when (it.throwable) {
+                        is IllegalArgumentException -> showInfoBoardSupportError()
+                        else -> showInfoBoardInternetError()
+                    }
                 }
             }
         }
     }
 
-    private fun showTechSupportError() {
+    private fun showInfoBoardSupportError() {
+        showInfoBoard(
+            getString(R.string.error_internet),
+            getString(R.string.error_tech_support_description),
+            R.drawable.ic_alien, R.string.button_try_again
+        )
+    }
+
+    private fun showInfoBoardInternetError() {
+        showInfoBoard(
+            getString(R.string.error_internet),
+            getString(R.string.error_internet_description),
+            R.drawable.ic_alien, R.string.button_try_again
+        )
+    }
+
+    private fun showInfoBoard(
+        title: String,
+        text: String,
+        @DrawableRes icon: Int? = null,
+        @StringRes titleButton: Int? = null
+    ) {
         with(binding.infoBoardView) {
-            setContent(
-                getString(R.string.error_internet),
-                getString(R.string.error_tech_support_description),
-                R.drawable.ic_alien, R.string.button_try_again
-            )
+            setContent(title, text, icon, titleButton)
             show()
         }
     }
 
-    private fun showInternetError() {
-        with(binding.infoBoardView) {
-            binding.infoBoardView.setContent(
-                getString(R.string.error_internet),
-                getString(R.string.error_internet_description),
-                R.drawable.ic_alien, R.string.button_try_again
-            )
-            show()
-        }
+    private fun showShimmers() {
+        binding.layoutHolidayShimmer.root.show()
+        binding.layoutHolidayShortShimmer.root.show()
     }
 
-    private fun showShimmers(isShow: Boolean) {
-        binding.layoutHolidayShimmer.root.isVisible = isShow
-        binding.layoutHolidayShortShimmer.root.isVisible = isShow
+    private fun hideShimmers() {
+        binding.layoutHolidayShimmer.root.gone()
+        binding.layoutHolidayShortShimmer.root.gone()
     }
 
     private fun hideContent() {
@@ -257,9 +270,10 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                     cvAnotherHolidays.show()
                     initHolidaysShortAdapter(holidays = holidays.filterIndexed { index, _ -> index != 0 })
                 }
-                binding.mbGoBack.isVisible = mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN) != Calendar.getInstance().time.withPattern(
-                    Constants.DEFAULT_DATE_PATTERN
-                )
+                binding.mbGoBack.isVisible =
+                    mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN) != Calendar.getInstance().time.withPattern(
+                        Constants.DEFAULT_DATE_PATTERN
+                    )
             }
         }
     }
@@ -272,23 +286,23 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
                 }
                 Status.SUCCESS -> {
                     binding.ivCalendar.isEnabled = true
-                    showShimmers(isShow = false)
+                    hideShimmers()
 
                     it.data?.let { data ->
                         data.dateString?.let {
                             binding.holidaysOfCurrentDayEmptyView.show()
                             binding.holidaysOfCurrentDayEmptyView.initDate(date = it)
                         } ?: run {
-                            showTechSupportError()
+                            showInfoBoardSupportError()
                         }
                     } ?: run {
-                        showTechSupportError()
+                        showInfoBoardSupportError()
                     }
                 }
                 Status.ERROR -> {
                     binding.ivCalendar.isEnabled = true
-                    showShimmers(isShow = false)
-                    showInternetError()
+                    hideShimmers()
+                    showInfoBoardInternetError()
                 }
             }
         }
