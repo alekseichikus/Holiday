@@ -34,4 +34,13 @@
     <item name="cornerRadius">8dp</item>
     <item name="backgroundTint">@color/transparent</item>
   </style>
+
+  <style name="BaseCircleButton" parent="android:Widget">
+    <item name="android:layout_gravity">center</item>
+    <item name="android:foreground">@drawable/background_ripple_circle</item>
+    <item name="android:background">@drawable/background_circle</item>
+    <item name="android:padding">10dp</item>
+    <item name="android:tint">@color/textTertiary</item>
+    <item name="android:backgroundTint">@color/backgroundButtonTransparentLight</item>
+  </style>
 </resources>

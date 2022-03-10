@@ -60,17 +60,17 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     private fun configureViews() {
-        setClosePanelPadding()
+        setPaddingContent()
         (requireActivity() as MainActions).changeNavigationBarColor(R.color.black)
-        setBackgroundAlpha(0xFF)
+        setBackgroundAlpha(FULL_TRANSPARENCY)
     }
 
-    private fun setBackgroundAlpha(@IntRange(from = 0, to = 0xFF) alpha: Int) {
+    private fun setBackgroundAlpha(@IntRange(from = 0, to = FULL_TRANSPARENCY.toLong()) alpha: Int) {
         binding.root.background.alpha = alpha
     }
 
-    private fun setClosePanelPadding() {
-        binding.llButtonContainer.setPaddingTopMenu()
+    private fun setPaddingContent() {
+        binding.clContainer.setPaddingTopMenu()
     }
 
     private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
@@ -140,13 +140,11 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     private fun initListeners() {
-        setCloseClick()
-        setRefreshClick()
-        setSwipeBackListener()
-        setBackPressedListener()
+        setSwipeBack()
+        setBackPressed()
     }
 
-    private fun setBackPressedListener() {
+    private fun setBackPressed() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
             OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -155,17 +153,17 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         })
     }
 
-    private fun setSwipeBackListener() {
+    private fun setSwipeBack() {
         binding.swipeBackLayout.setSwipeBackListener(object : SwipeBackLayout.OnSwipeBackListener {
             override fun onViewPositionChanged(
                 mView: View?,
                 swipeBackFraction: Float,
                 swipeBackFactor: Float
             ) {
-                with((0xFF * (1 - swipeBackFraction)).roundToInt()) {
+                with((FULL_TRANSPARENCY * (1 - swipeBackFraction)).roundToInt()) {
                     setBackgroundAlpha(
-                        if (this > 0xFF)
-                            0xFF
+                        if (this > FULL_TRANSPARENCY)
+                            FULL_TRANSPARENCY
                         else
                             this
                     )
@@ -179,20 +177,16 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         })
     }
 
-    private fun setRefreshClick() {
-        binding.mbRefresh.setOnClickListener {
-            photoViewModel.photos.value?.let {
-                it.find { photoModel -> photoModel.isSelected }?.let { photoModel ->
-                    loadImage(photoModel)
-                }
+    fun onRefreshClick() {
+        photoViewModel.photos.value?.let {
+            it.find { photoModel -> photoModel.isSelected }?.let { photoModel ->
+                loadImage(photoModel)
             }
         }
     }
 
-    private fun setCloseClick() {
-        binding.ivClose.setOnClickListener {
-            onBack()
-        }
+    fun onCloseClick(){
+        onBack()
     }
 
     override fun onDestroy() {
@@ -201,19 +195,20 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     private val photos by lazy {
-        requireArguments().getSerializable(KEY_PHOTOS) as Array<PhotoModel>
+        requireArguments().getSerializable(PARAM_PHOTOS) as Array<PhotoModel>
     }
 
     private val position by lazy {
-        requireArguments().getInt(KEY_POSITION)
+        requireArguments().getInt(PARAM_POSITION)
     }
 
     companion object {
-        private const val KEY_PHOTOS = "photos"
-        private const val KEY_POSITION: String = "position"
+        private const val PARAM_PHOTOS = "photos"
+        private const val PARAM_POSITION = "position"
+        private const val FULL_TRANSPARENCY = 0xFF
         fun getInstance(photos: Array<PhotoModel>, position: Int): PhotoFragment {
             return PhotoFragment().apply {
-                arguments = bundleOf(KEY_PHOTOS to photos, KEY_POSITION to position)
+                arguments = bundleOf(PARAM_PHOTOS to photos, PARAM_POSITION to position)
             }
         }
     }

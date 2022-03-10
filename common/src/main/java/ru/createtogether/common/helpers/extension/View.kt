@@ -12,7 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import retrofit2.Response
 import ru.createtogether.common.R
+import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Utils
 import java.text.SimpleDateFormat
 import java.util.*
@@ -127,4 +133,23 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
         ).commit()
 }
 
-inline fun <T> T.isNotNull()  = this != null
+suspend fun <T> Flow<Event<T>>.exceptionProcessing(liveData: MutableLiveData<Event<T>>) {
+    runCatching {
+        collect {
+            liveData.postValue(it)
+        }
+    }.onFailure { throwable ->
+        liveData.postValue(Event.error(throwable = throwable))
+    }
+}
+
+fun <T> Response<T>.responseProcessing(): T {
+    with(this) {
+        if (isSuccessful && body().isNotNull()) {
+            return body()!!
+        } else
+            throw IllegalArgumentException()
+    }
+}
+
+inline fun <T> T.isNotNull() = this != null

@@ -26,7 +26,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fragment-holiday/Holiday.fragment-holiday.iml" filepath="$PROJECT_DIR$/.idea/modules/fragment-holiday/Holiday.fragment-holiday.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fragment-main/Holiday.fragment-main.iml" filepath="$PROJECT_DIR$/.idea/modules/fragment-main/Holiday.fragment-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/fragment-photo/Holiday.fragment-photo.iml" filepath="$PROJECT_DIR$/.idea/modules/fragment-photo/Holiday.fragment-photo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Holiday222.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/Holiday222.buildSrc.iml" />
     </modules>
   </component>
 </project>

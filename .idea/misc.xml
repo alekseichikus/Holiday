@@ -54,7 +54,7 @@
         <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.1765625" />
         <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.21014492753623187" />
         <entry key="fragment-main/src/main/res/layout/fragment_main.xml" value="0.1038500506585613" />
-        <entry key="fragment-photo/src/main/res/layout/fragment_photo.xml" value="0.1" />
+        <entry key="fragment-photo/src/main/res/layout/fragment_photo.xml" value="0.33541666666666664" />
       </map>
     </option>
   </component>
