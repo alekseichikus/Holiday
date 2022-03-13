@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.squareup.moshi.JsonDataException
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
 import ru.createtogether.common.helpers.AdapterActions
@@ -200,7 +201,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                     hideShimmers()
                     binding.ivCalendar.isEnabled = true
                     when (it.throwable) {
-                        is IllegalArgumentException -> showInfoBoardSupportError()
+                        is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
                         else -> showInfoBoardInternetError()
                     }
                 }

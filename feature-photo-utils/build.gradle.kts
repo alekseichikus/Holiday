@@ -1,6 +1,7 @@
 plugins {
     id ("com.android.library")
     id ("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -41,4 +42,7 @@ dependencies {
     implementation("junit:junit:4.13.2")
     implementation("androidx.test.ext:junit:1.1.3")
     implementation("androidx.test.espresso:espresso-core:3.4.0")
+
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
 }

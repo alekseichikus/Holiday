@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
@@ -20,6 +21,7 @@ import retrofit2.Response
 import ru.createtogether.common.R
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Utils
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.contracts.contract
@@ -133,10 +135,10 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
         ).commit()
 }
 
-suspend fun <T> Flow<Event<T>>.exceptionProcessing(liveData: MutableLiveData<Event<T>>) {
+suspend fun <T> Flow<T>.exceptionProcessing(liveData: MutableLiveData<Event<T>>) {
     runCatching {
         collect {
-            liveData.postValue(it)
+            liveData.postValue(Event.success(it))
         }
     }.onFailure { throwable ->
         liveData.postValue(Event.error(throwable = throwable))

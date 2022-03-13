@@ -2,6 +2,7 @@ package ru.createtogether.feature_holiday_impl.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -27,9 +28,9 @@ class HolidayViewModel @Inject constructor(
     }
 
     var holidaysByIdResponse = MutableLiveData<Event<List<HolidayModel>>>()
-    fun loadHolidaysById(holidays: Array<Int>) {
+    fun loadHolidaysById(holidaysId: Array<Int>) {
         viewModelScope.launch {
-            holidayRepository.loadHolidaysById(holidays = holidays)
+            holidayRepository.loadHolidaysById(holidaysId = holidaysId)
                 .exceptionProcessing(holidaysByIdResponse)
         }
     }

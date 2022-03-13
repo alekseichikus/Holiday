@@ -6,10 +6,10 @@ import ru.createtogether.feature_day_utils.model.DayModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 
 interface HolidayRepository {
-    suspend fun loadHolidays(date: String): Flow<Event<List<HolidayModel>>>
-    suspend fun loadHolidaysById(holidays: Array<Int>): Flow<Event<List<HolidayModel>>>
-    suspend fun loadNextDateWithHolidays(date: String): Flow<Event<DayModel>>
-    suspend fun loadHolidaysOfMonth(date: String): Flow<Event<List<DayModel>>>
+    suspend fun loadHolidays(date: String): Flow<List<HolidayModel>>
+    suspend fun loadHolidaysById(holidaysId: Array<Int>): Flow<List<HolidayModel>>
+    suspend fun loadNextDateWithHolidays(date: String): Flow<DayModel>
+    suspend fun loadHolidaysOfMonth(date: String): Flow<List<DayModel>>
 
     fun getFavorites(): Array<Int>
     fun addFavorite(holiday: Int)

@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     id ("com.android.library")
     id ("org.jetbrains.kotlin.android")
+    id ("kotlin-kapt")
 }
 
 android {
@@ -42,13 +45,12 @@ dependencies {
     implementation("androidx.test.ext:junit:1.1.3")
     implementation("androidx.test.espresso:espresso-core:3.4.0")
 
-    implementation("com.squareup.retrofit2:retrofit:2.7.2")
+    implementation("com.squareup.moshi:moshi:1.13.0")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
 
     implementation(projects.common)
 
     implementation(projects.featureCountryUtils)
 
     implementation(projects.featurePhotoUtils)
-
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 }

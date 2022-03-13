@@ -37,12 +37,14 @@ class HolidayLocalDataSourceImpl @Inject constructor(@ApplicationContext context
     )
     override var isNotifyAboutHolidays by Preferences.BooleanPreference(
         prefs,
-        PREF_NOTIFY_ABOUT_HOLIDAYS, true
+        PREF_NOTIFY_ABOUT_HOLIDAYS, DEFAULT_NOTIFY_ABOUT_HOLIDAYS
     )
 
     companion object {
         const val PREF_HOLIDAY_FAVORITES = "pref_holiday_favorites"
         const val PREF_NEXT_DAY_WITH_HOLIDAYS = "pref_next_day_with_holidays"
         const val PREF_NOTIFY_ABOUT_HOLIDAYS = "pref_notify_about_holidays"
+
+        private const val DEFAULT_NOTIFY_ABOUT_HOLIDAYS = true
     }
 }

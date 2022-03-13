@@ -37,10 +37,25 @@ android {
 }
 
 dependencies {
+    testImplementation(projects.featureCountryUtils)
+    testImplementation(projects.featureHolidayUtils)
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.hamcrest:hamcrest-all:1.3")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation ("org.robolectric:robolectric:4.7.3")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0") {
+        // https://github.com/Kotlin/kotlinx.coroutines/tree/master/kotlinx-coroutines-debug#debug-agent-and-android
+        exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-debug")
+    }
+
+    testImplementation("androidx.test:core-ktx:1.4.0")
+    testImplementation("androidx.test.ext:junit:1.1.3")
+
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
-    implementation("junit:junit:4.13.2")
+
+
     implementation("androidx.test.ext:junit:1.1.3")
     implementation("androidx.test.espresso:espresso-core:3.4.0")
 
