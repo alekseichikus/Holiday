@@ -41,6 +41,9 @@
         <entry key="bottom_calendar/src/main/res/layout/bottom_dialog_calendar.xml" value="0.10371376811594203" />
         <entry key="bottom_calendar/src/main/res/layout/item_day.xml" value="0.1" />
         <entry key="bottom_calendar/src/main/res/layout/item_month.xml" value="0.10371376811594203" />
+        <entry key="common/src/main/res/drawable/ic_bookmark.xml" value="0.193" />
+        <entry key="common/src/main/res/drawable/ic_bookmark_r.xml" value="0.1035" />
+        <entry key="common/src/main/res/drawable/ic_redo_alt_solid.xml" value="0.1" />
         <entry key="common/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="common/src/main/res/layout/bottom_dialog_base.xml" value="0.1" />
         <entry key="common/src/main/res/layout/item_drop_down.xml" value="0.1" />
@@ -51,8 +54,9 @@
         <entry key="feature-holiday/src/main/res/layout/view_holiday_short.xml" value="0.1" />
         <entry key="feature-holiday/src/main/res/layout/view_holidays_of_current_day_empty.xml" value="0.1" />
         <entry key="feature-info-board/src/main/res/layout/layout_info_board.xml" value="0.1" />
+        <entry key="feature-photo/src/main/res/layout/view_load_photo.xml" value="0.1" />
         <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.1765625" />
-        <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.21014492753623187" />
+        <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.1" />
         <entry key="fragment-main/src/main/res/layout/fragment_main.xml" value="0.1038500506585613" />
         <entry key="fragment-photo/src/main/res/layout/fragment_photo.xml" value="0.33541666666666664" />
       </map>

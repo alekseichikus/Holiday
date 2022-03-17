@@ -10,7 +10,7 @@ import java.io.Serializable
 @JsonClass(generateAdapter = true)
 data class HolidayModel(
     val id: Int,
-    var type: HolidayTypeEnum?,
+    var type: HolidayTypeEnum = HolidayTypeEnum.DEFAULT,
     @Json(name = "name")
     val title: String,
     @Json(ignore = true)
@@ -18,6 +18,6 @@ data class HolidayModel(
     val description: String,
     var date: String,
     @Json(name = "urls")
-    val images: List<PhotoModel>?,
-    val region: CountryEnum
-): Serializable
+    val images: List<PhotoModel> = listOf(),
+    val region: CountryEnum = CountryEnum.UNDEFINED
+) : Serializable

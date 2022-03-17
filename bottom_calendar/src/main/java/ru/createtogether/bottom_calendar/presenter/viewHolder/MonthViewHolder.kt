@@ -31,8 +31,6 @@ class MonthViewHolder(
         with(binding.rvDays) {
             if (adapter == null)
                 adapter = DayAdapter(month.days, onDayClick)
-            else
-                (adapter as AdapterActions).setData(month.days)
         }
     }
 }

@@ -47,4 +47,6 @@ dependencies {
     implementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation("com.squareup.retrofit2:retrofit:2.7.2")
+
+    implementation("com.github.bumptech.glide:glide:4.11.0")
 }

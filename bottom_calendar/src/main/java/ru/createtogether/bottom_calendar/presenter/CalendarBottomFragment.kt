@@ -15,7 +15,7 @@ import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseBottomDialogFragment
 import ru.createtogether.common.helpers.extension.*
-import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
+import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
 import java.util.*
 
@@ -25,7 +25,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     private val binding: BottomDialogCalendarBinding by viewBinding()
     private val calendarViewModel: CalendarViewModel by viewModels()
 
-    private val holidayViewModel: HolidayViewModel by viewModels()
+    private val baseHolidayViewModel: BaseHolidayViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,7 +77,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun observeHolidaysOfMonthResponse() {
-        holidayViewModel.holidaysOfMonth.observe(viewLifecycleOwner) {
+        baseHolidayViewModel.holidaysOfMonth.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
 
@@ -141,7 +141,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
 
                 Status.SUCCESS -> {
                     it.data?.let {
-                        holidayViewModel.loadHolidaysOfMonth(
+                        baseHolidayViewModel.loadHolidaysOfMonth(
                             Calendar.getInstance().apply {
                                 timeInMillis = this@CalendarBottomFragment.time
                                 set(
@@ -172,8 +172,6 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
         with(binding.rvMonths) {
             if (adapter == null)
                 adapter = MonthAdapter(initMonths = months, ::onDayClick)
-            else
-                (adapter as AdapterActions).setData(months)
         }
     }
 

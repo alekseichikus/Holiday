@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.createtogether.common.helpers.AdapterActions
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
 import ru.createtogether.feature_holiday.HolidayShortView
 import ru.createtogether.feature_holiday_utils.helpers.HolidayShortDiffUtilCallback
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
@@ -16,7 +17,7 @@ class HolidayShortAdapter(
     private val onLongClick: HolidayModel.() -> Unit,
     private val onPhotoClick: (HolidayModel, PhotoModel) -> Unit,
     private val isFavoriteShow: Boolean = true
-) : RecyclerView.Adapter<HolidayShortAdapter.HolidayShortViewHolder>(), AdapterActions {
+) : RecyclerView.Adapter<HolidayShortAdapter.HolidayShortViewHolder>(), AdapterActions<HolidayModel> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         HolidayShortViewHolder(
@@ -34,16 +35,6 @@ class HolidayShortAdapter(
         holder.bind(holidays[position])
     }
 
-    override fun getData() = holidays
-
-    override fun setData(list: List<Any>) {
-        val holidayShortDiffUtilCallback =
-            HolidayShortDiffUtilCallback(getData(), (list as List<HolidayModel>))
-        val productDiffResult = DiffUtil.calculateDiff(holidayShortDiffUtilCallback)
-        holidays = list.toMutableList()
-        productDiffResult.dispatchUpdatesTo(this)
-    }
-
     override fun getItemCount() = holidays.size
 
     inner class HolidayShortViewHolder(
@@ -53,4 +44,17 @@ class HolidayShortAdapter(
             holidayShortView.setHoliday(holiday = holiday)
         }
     }
+
+    override var items: Array<HolidayModel> = emptyArray()
+    override lateinit var action: BaseAction<HolidayModel>
+
+    override fun setData(array: Array<HolidayModel>) {
+        val holidayShortDiffUtilCallback =
+            HolidayShortDiffUtilCallback(getData(), array)
+        val productDiffResult = DiffUtil.calculateDiff(holidayShortDiffUtilCallback)
+        items = array
+        productDiffResult.dispatchUpdatesTo(this)
+    }
+
+    override fun getData(): Array<HolidayModel> = items
 }

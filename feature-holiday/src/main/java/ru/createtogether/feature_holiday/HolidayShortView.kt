@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import ru.createtogether.common.helpers.AdapterActions
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
+import ru.createtogether.common.helpers.extension.initAdapter
 import ru.createtogether.common.helpers.extension.setDateString
 import ru.createtogether.common.helpers.extension.withPattern
 import ru.createtogether.feature_holiday.databinding.ViewHolidayShortBinding
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_photo.adapter.PhotoAdapter
+import ru.createtogether.feature_photo.helpers.loadImage
 import ru.createtogether.feature_photo_utils.PhotoModel
 import java.util.*
 
@@ -122,17 +126,22 @@ class HolidayShortView(
     }
 
     private fun setPhotosAdapter(holidayResponse: HolidayModel) {
-        if (!holidayResponse.images.isNullOrEmpty())
-            initPhotoSmallAdapter(holidayResponse.images!!)
+        if (holidayResponse.images.isNotEmpty())
+            initPhotoSmallAdapter(holidayResponse.images.toTypedArray())
         binding.clPhotosContainer.isVisible = holidayResponse.images.isNullOrEmpty().not()
     }
 
-    private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
-        with(binding.rvPhoto) {
-            if (adapter == null)
-                adapter = PhotoAdapter(images.toMutableList(), ::onPhotoClick)
-            else
-                (adapter as AdapterActions).setData(images)
+    private fun initPhotoSmallAdapter(images: Array<PhotoModel>) {
+        with(binding) {
+            rvPhoto.initAdapter(
+                images,
+                PhotoAdapter::class.java,
+                object : BaseAction<PhotoModel> {
+                    override fun onClick(item: PhotoModel) {
+                        onPhotoClick(photo = item)
+                    }
+                }
+            )
         }
     }
 

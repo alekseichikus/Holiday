@@ -16,7 +16,7 @@ import ru.createtogether.common.helpers.Utils
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday.adapter.HolidayShortAdapter
-import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
+import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
 import ru.createtogether.feature_photo_utils.PhotoModel
@@ -35,8 +35,8 @@ import java.util.*
 @AndroidEntryPoint
 class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     private val binding: FragmentMainBinding by viewBinding()
-    private val holidayViewModel: HolidayViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    private val baseHolidayViewModel: BaseHolidayViewModel by viewModels()
+    override val viewModel: MainViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,11 +45,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
         initObservers()
 
         loadHolidaysOfDay()
-        holidayViewModel.loadNextDateWithHolidays(mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN))
+        baseHolidayViewModel.loadNextDateWithHolidays(viewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN))
     }
 
     private fun configureViews() {
-        binding.clScrollContainer.setPaddingTopMenu()
+        binding.clScrollContainer.setPaddingTop()
     }
 
     private fun initListeners() {
@@ -67,17 +67,17 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
 
     private fun setGoBackClick() {
         binding.mbGoBack.setOnClickListener {
-            mainViewModel.currentDate = Calendar.getInstance().time
-            holidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(mainViewModel.currentDate))
+            viewModel.currentDate = Calendar.getInstance().time
+            baseHolidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(viewModel.currentDate))
         }
     }
 
     private fun setGoToNextDayClick() {
         binding.holidaysOfCurrentDayEmptyView.setGoToClickListener {
-            mainViewModel.currentDate = Calendar.getInstance().setDateString(it).time
-            holidayViewModel.loadHolidaysOfDay(
+            viewModel.currentDate = Calendar.getInstance().setDateString(it).time
+            baseHolidayViewModel.loadHolidaysOfDay(
                 Utils.convertDateToDateString(
-                    mainViewModel.currentDate
+                    viewModel.currentDate
                 )
             )
         }
@@ -128,7 +128,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
             result.getLong(CalendarBottomFragment.DATE_LONG).let {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
-                mainViewModel.currentDate = calendar.time
+                viewModel.currentDate = calendar.time
                 loadHolidaysOfDay()
             }
         }
@@ -143,13 +143,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
         )
 
         if (holiday.isLike)
-            holidayViewModel.addHolidayLike(holiday.id)
+            baseHolidayViewModel.addHolidayLike(holiday.id)
         else
-            holidayViewModel.removeFavorite(holiday.id)
+            baseHolidayViewModel.removeFavorite(holiday.id)
     }
 
     private fun loadHolidaysOfDay() {
-        holidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(mainViewModel.currentDate))
+        baseHolidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(viewModel.currentDate))
     }
 
     private fun initObservers() {
@@ -167,10 +167,10 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     private fun observeLoadHolidaysOfDay() {
-        holidayViewModel.holidaysOfDayResponse.observe(viewLifecycleOwner) {
+        baseHolidayViewModel.holidaysOfDayResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
+                    setDate(Calendar.getInstance().apply { time = viewModel.currentDate })
 
                     showShimmers()
                     hideContent()
@@ -179,8 +179,8 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                 Status.SUCCESS -> {
                     it.data?.let { holidays ->
                         if (holidays.isEmpty())
-                            mainViewModel.currentDate.let { date ->
-                                holidayViewModel.loadNextDateWithHolidays(
+                            viewModel.currentDate.let { date ->
+                                baseHolidayViewModel.loadNextDateWithHolidays(
                                     Utils.convertDateToDateString(
                                         date
                                     )
@@ -201,6 +201,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                     hideShimmers()
                     binding.ivCalendar.isEnabled = true
                     when (it.throwable) {
+
                         is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
                         else -> showInfoBoardInternetError()
                     }
@@ -272,7 +273,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                     initHolidaysShortAdapter(holidays = holidays.filterIndexed { index, _ -> index != 0 })
                 }
                 binding.mbGoBack.isVisible =
-                    mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN) != Calendar.getInstance().time.withPattern(
+                    viewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN) != Calendar.getInstance().time.withPattern(
                         Constants.DEFAULT_DATE_PATTERN
                     )
             }
@@ -280,10 +281,10 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     private fun observeLoadNextDayWithHolidays() {
-        holidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
+        baseHolidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
+                    setDate(Calendar.getInstance().apply { time = viewModel.currentDate })
                 }
                 Status.SUCCESS -> {
                     binding.ivCalendar.isEnabled = true
@@ -310,14 +311,14 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     private fun observeLoadNextDateWithHolidays() {
-        holidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
+        baseHolidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
+                    setDate(Calendar.getInstance().apply { time = viewModel.currentDate })
                 }
                 Status.SUCCESS -> {
                     it.data?.dateString?.let { date ->
-                        holidayViewModel.nextDayWithHolidays = date
+                        baseHolidayViewModel.nextDayWithHolidays = date
                     }
                     WorkerModule.runHolidayWorker(requireContext())
                 }
@@ -330,7 +331,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
 
     private fun setCalendarClick() {
         binding.ivCalendar.setOnClickListener {
-            CalendarBottomFragment.getInstance(mainViewModel.currentDate.time)
+            CalendarBottomFragment.getInstance(viewModel.currentDate.time)
                 .show(childFragmentManager, CalendarBottomFragment.javaClass.name)
         }
     }
@@ -345,8 +346,6 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                     ::openLongClick,
                     ::onPhotoClick
                 )
-            else
-                (adapter as AdapterActions).setData(holidays)
         }
     }
 

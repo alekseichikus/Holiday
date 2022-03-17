@@ -9,11 +9,12 @@ import ru.createtogether.birthday.imageCalendar.model.MonthModel
 import ru.createtogether.bottom_calendar.presenter.viewHolder.MonthViewHolder
 import ru.createtogether.bottom_calendar.databinding.ItemMonthBinding
 import ru.createtogether.common.helpers.AdapterActions
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
 import kotlin.properties.Delegates
 
 class MonthAdapter(private val initMonths: List<MonthModel>, private val onDayClick: (DayModel) -> Unit) :
     RecyclerView.Adapter<MonthViewHolder>(),
-    AdapterActions {
+    AdapterActions<MonthModel> {
 
     var months: List<MonthModel> by Delegates.observable(emptyList()) { _, old, new ->
         MonthDiffUtilCallback(old, new).calculateDiff().dispatchUpdatesTo(this)
@@ -38,9 +39,12 @@ class MonthAdapter(private val initMonths: List<MonthModel>, private val onDayCl
     }
 
     override fun getItemCount() = months.size
-    override fun getData() = months
+    override fun getData() = items
 
-    override fun setData(list: List<Any>) {
-        months = list as List<MonthModel>
+    override var items: Array<MonthModel> = emptyArray()
+    override lateinit var action: BaseAction<MonthModel>
+
+    override fun setData(array: Array<MonthModel>) {
+        items = array
     }
 }

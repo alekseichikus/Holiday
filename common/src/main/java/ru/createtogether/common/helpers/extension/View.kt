@@ -1,32 +1,52 @@
 package ru.createtogether.common.helpers.extension
 
+import Constants
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import ru.createtogether.common.R
+import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Utils
-import java.lang.NullPointerException
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
+import java.lang.Exception
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.contracts.contract
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
-fun View.setPaddingTopMenu() {
+fun View.setPaddingTop() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         setOnApplyWindowInsetsListener { v, insets ->
             v.updatePadding(
@@ -97,6 +117,20 @@ fun Calendar.setDateString(date: String): Calendar {
 
 fun Date.withPattern(pattern: String) = SimpleDateFormat(pattern, Locale.getDefault()).format(time)
 
+fun getDateString(date: String, patterns: String): String {
+    val time = Calendar.getInstance().setDateString(date = date).time
+    var text = ""
+
+    with(patterns.split(Constants.DATE_DELIMITERS)) {
+        forEachIndexed { index, pattern ->
+            text += time.withPattern(pattern)
+            if (index != this.size - 1)
+                text += " "
+        }
+    }
+    return text
+}
+
 fun Fragment.onBack() {
     parentFragmentManager.popBackStack()
 }
@@ -155,3 +189,72 @@ fun <T> Response<T>.responseProcessing(): T {
 }
 
 inline fun <T> T.isNotNull() = this != null
+
+fun View.showSnackBar(snackBarText: String, timeLength: Int) {
+    Snackbar.make(this, snackBarText, timeLength).run {
+        show()
+    }
+}
+
+fun View.setupSnackBar(
+    lifecycleOwner: LifecycleOwner,
+    snackBarEvent: LiveData<Event<Int>>,
+    timeLength: Int
+) {
+    snackBarEvent.observe(lifecycleOwner) {
+        it.data?.let { textId ->
+            showSnackBar(context.getString(textId), timeLength)
+        }
+    }
+}
+
+fun Context.shareText(title: String, text: StringBuilder) {
+    startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtras(bundleOf(Intent.EXTRA_TEXT to text))
+    }, title))
+}
+
+fun <T, K> RecyclerView.initAdapter(
+    data: Array<T>,
+    adapterClass: Class<K>,
+    actionAdapter: BaseAction<T>? = null
+) {
+    if (adapter == null) {
+        adapter = adapterClass.newInstance() as RecyclerView.Adapter<*>
+    }
+    if (adapter is AdapterActions<*>) {
+        (adapter as AdapterActions<T>).setData(data)
+        if (actionAdapter != null)
+            (adapter as AdapterActions<T>).action = actionAdapter
+    }
+}
+
+suspend fun ImageView.loadImage(url: String): Result<Boolean> = suspendCoroutine {
+    Glide.with(this)
+        .load(url)
+        .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
+        .addListener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                it.resumeWithException(e ?: Exception())
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                it.resume(Result.success(true))
+                return false
+            }
+        })
+        .into(this)
+}

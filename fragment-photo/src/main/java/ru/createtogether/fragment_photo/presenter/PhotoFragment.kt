@@ -7,21 +7,21 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.IntRange
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import dagger.hilt.android.AndroidEntryPoint
-import ru.createtogether.common.helpers.AdapterActions
+import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.MainActions
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
-import ru.createtogether.common.helpers.extension.gone
-import ru.createtogether.common.helpers.extension.onBack
-import ru.createtogether.common.helpers.extension.setPaddingTopMenu
-import ru.createtogether.common.helpers.extension.show
+import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_photo.adapter.PhotoAdapter
+import ru.createtogether.feature_photo.helpers.PhotoAdapterListener
 import ru.createtogether.feature_photo_utils.PhotoModel
+import ru.createtogether.feature_photo_utils.helpers.PhotoConstants
 import ru.createtogether.fragment_photo.R
 import ru.createtogether.fragment_photo.customView.SwipeBackLayout
 import ru.createtogether.fragment_photo.databinding.FragmentPhotoBinding
@@ -33,7 +33,7 @@ import kotlin.math.roundToInt
 class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     private val binding: FragmentPhotoBinding by viewBinding()
 
-    private val photoViewModel: PhotoViewModel by viewModels()
+    override val viewModel: PhotoViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,92 +50,63 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     private fun observePhotos() {
-        photoViewModel.photos.observe(viewLifecycleOwner) {
-            initPhotoSmallAdapter(images = it.map { it.copy() })
+        viewModel.photos.observe(viewLifecycleOwner) {
+            initPhotoSmallAdapter(images = it.map { it.copy() }.toTypedArray())
         }
     }
 
     private fun initData() {
-        photoViewModel.photos.value = photos.toList()
+        viewModel.photos.value = photos.toList()
     }
 
     private fun configureViews() {
         setPaddingContent()
         (requireActivity() as MainActions).changeNavigationBarColor(R.color.black)
-        setBackgroundAlpha(FULL_TRANSPARENCY)
+        setBackgroundAlpha(PhotoConstants.FULLY_VISIBLE)
     }
 
-    private fun setBackgroundAlpha(@IntRange(from = 0, to = FULL_TRANSPARENCY.toLong()) alpha: Int) {
+    private fun setBackgroundAlpha(
+        @IntRange(
+            from = 0,
+            to = PhotoConstants.FULLY_VISIBLE.toLong()
+        ) alpha: Int
+    ) {
         binding.root.background.alpha = alpha
     }
 
     private fun setPaddingContent() {
-        binding.clContainer.setPaddingTopMenu()
+        binding.clContainer.setPaddingTop()
     }
 
-    private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
-        with(binding.rvPhoto) {
-            if (adapter == null)
-                adapter = PhotoAdapter(images.toMutableList(), ::onPhotoClick)
-            else
-                (adapter as AdapterActions).setData(images)
-        }
+    private fun initPhotoSmallAdapter(images: Array<PhotoModel>) {
+        binding.rvPhoto.initAdapter(
+            images,
+            PhotoAdapter::class.java,
+            object : PhotoAdapterListener {
+                override fun onClick(item: PhotoModel) {
+                    onPhotoClick(item)
+                }
+            })
     }
 
     private fun onPhotoClick(photo: PhotoModel) {
-        with(photoViewModel.photos){
-            value?.forEach { photo_ ->
-                if(photo_.isSelected)
-                    photo_.isSelected = false
-                if(photo_.id == photo.id)
-                    photo_.isSelected = true
-            }
-            postValue(value)
-        }
+        viewModel.setSelectedPhoto(photo = photo)
         loadImage(photo)
     }
 
     private fun loadImage(image: PhotoModel) {
-        Glide.with(requireContext())
-            .load(image.url)
-            .addListener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    setState(Status.ERROR)
-                    return false
+        lifecycleScope.launch {
+            val result = binding.photoView.loadImage(image.url)
+            when {
+                result.isSuccess -> {
+                    binding.progressBar.show()
+                    binding.llErrorContainer.gone()
                 }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    setState(Status.SUCCESS)
-                    return false
+                else -> {
+                    binding.progressBar.gone()
+                    binding.llErrorContainer.show()
                 }
-
-
-            })
-            .into(binding.photoView)
-    }
-
-    private fun setState(status: Status) {
-        when (status) {
-            Status.ERROR -> {
-                binding.progressBar.gone()
-                binding.llErrorContainer.show()
             }
-            Status.SUCCESS -> {
-                binding.progressBar.show()
-                binding.llErrorContainer.gone()
-            }
-            else -> {}
         }
     }
 
@@ -156,21 +127,14 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     private fun setSwipeBack() {
         binding.swipeBackLayout.setSwipeBackListener(object : SwipeBackLayout.OnSwipeBackListener {
             override fun onViewPositionChanged(
-                mView: View?,
+                mView: View,
                 swipeBackFraction: Float,
                 swipeBackFactor: Float
             ) {
-                with((FULL_TRANSPARENCY * (1 - swipeBackFraction)).roundToInt()) {
-                    setBackgroundAlpha(
-                        if (this > FULL_TRANSPARENCY)
-                            FULL_TRANSPARENCY
-                        else
-                            this
-                    )
-                }
+                setBackgroundAlpha(viewModel.getStateTransparent(swipeBackFraction = swipeBackFraction))
             }
 
-            override fun onViewSwipeFinished(mView: View?, isEnd: Boolean) {
+            override fun onViewSwipeFinished(mView: View, isEnd: Boolean) {
                 if (isEnd)
                     onBack()
             }
@@ -178,14 +142,10 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     fun onRefreshClick() {
-        photoViewModel.photos.value?.let {
-            it.find { photoModel -> photoModel.isSelected }?.let { photoModel ->
-                loadImage(photoModel)
-            }
-        }
+        loadImage(viewModel.getSelectedPhoto())
     }
 
-    fun onCloseClick(){
+    fun onCloseClick() {
         onBack()
     }
 
@@ -205,7 +165,6 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     companion object {
         private const val PARAM_PHOTOS = "photos"
         private const val PARAM_POSITION = "position"
-        private const val FULL_TRANSPARENCY = 0xFF
         fun getInstance(photos: Array<PhotoModel>, position: Int): PhotoFragment {
             return PhotoFragment().apply {
                 arguments = bundleOf(PARAM_PHOTOS to photos, PARAM_POSITION to position)

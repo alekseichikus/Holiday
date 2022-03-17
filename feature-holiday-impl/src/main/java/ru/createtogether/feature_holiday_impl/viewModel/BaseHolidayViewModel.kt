@@ -1,9 +1,6 @@
 package ru.createtogether.feature_holiday_impl.viewModel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -16,7 +13,7 @@ import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 
 @HiltViewModel
-class HolidayViewModel @Inject constructor(
+class BaseHolidayViewModel @Inject constructor(
     private val holidayRepository: HolidayRepository
 ) : ViewModel() {
 
@@ -58,6 +55,16 @@ class HolidayViewModel @Inject constructor(
 
     fun removeFavorite(id: Int) {
         holidayRepository.removeFavorite(id)
+    }
+
+    fun setFavorite(holiday: HolidayModel){
+        with(holiday){
+            isLike = isLike.not()
+            if (isLike)
+                addHolidayLike(holiday.id)
+            else
+                removeFavorite(holiday.id)
+        }
     }
 
     var nextDayWithHolidays: String?

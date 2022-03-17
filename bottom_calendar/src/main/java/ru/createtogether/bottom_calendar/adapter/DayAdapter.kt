@@ -8,10 +8,11 @@ import ru.createtogether.bottom_calendar.model.DayModel
 import ru.createtogether.birthday.imageCalendar.presenter.viewHolder.DayViewHolder
 import ru.createtogether.bottom_calendar.databinding.ItemDayBinding
 import ru.createtogether.common.helpers.AdapterActions
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
 import kotlin.properties.Delegates
 
 class DayAdapter(private val initDays: List<DayModel>, private val onDayClick: (DayModel) -> Unit) : RecyclerView.Adapter<DayViewHolder>(),
-    AdapterActions {
+    AdapterActions<DayModel> {
 
     var days: List<DayModel> by Delegates.observable(emptyList()) { _, old, new ->
         DayDiffUtilCallback(old, new).calculateDiff().dispatchUpdatesTo(this)
@@ -30,10 +31,12 @@ class DayAdapter(private val initDays: List<DayModel>, private val onDayClick: (
     }
 
     override fun getItemCount() = days.size
-    override fun getData() = days
+    override var items: Array<DayModel> = emptyArray()
+    override lateinit var action: BaseAction<DayModel>
 
-    override fun setData(days: List<Any>) {
-        this.days = days as List<DayModel>
+    override fun setData(array: Array<DayModel>) {
+        items = array
     }
 
+    override fun getData(): Array<DayModel> = items
 }

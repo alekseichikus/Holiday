@@ -8,7 +8,7 @@
     <item name="android:insetRight">0dp</item>
     <item name="elevation">0dp</item>
     <item name="android:padding">16dp</item>
-    <item name="cornerRadius">8dp</item>
+    <item name="cornerRadius">0dp</item>
     <item name="iconSize">24dp</item>
     <item name="iconGravity">textStart</item>
     <item name="android:textAllCaps">false</item>
@@ -26,12 +26,18 @@
     <item name="backgroundTint">@color/textTertiary</item>
   </style>
 
+  <style name="Button.Base.Text.Action">
+    <item name="android:textColor">@color/textTertiary</item>
+    <item name="iconTint">@color/textTertiary</item>
+  </style>
+
   <style name="Button.Base.Text">
     <item name="android:textColor">@color/textPrimary</item>
     <item name="android:textStyle">bold</item>
+    <item name="iconSize">24dp</item>
+    <item name="iconPadding">12dp</item>
     <item name="android:textAlignment">center</item>
     <item name="android:textAppearance">@style/TextDefault</item>
-    <item name="cornerRadius">8dp</item>
     <item name="backgroundTint">@color/transparent</item>
   </style>
 

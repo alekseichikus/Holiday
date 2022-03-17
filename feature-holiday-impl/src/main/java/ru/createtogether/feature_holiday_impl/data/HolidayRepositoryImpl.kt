@@ -2,7 +2,6 @@ package ru.createtogether.feature_holiday_impl.data
 
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import ru.createtogether.common.helpers.Event
 import javax.inject.Inject
 
 class HolidayRepositoryImpl @Inject constructor(

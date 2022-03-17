@@ -8,9 +8,11 @@ object Constants {
      const val FEEDBACK_MAIL = "mokshantsev.aleksei@yandex.ru"
      const val DEFAULT_DATE_PATTERN = "dd-MM-yyyy"
 
+     const val DATE_DELIMITERS = "/"
      const val PATTERN_MMM = "MMM" //месяц
      const val PATTERN_MMMM = "MMMM" //месяц
      const val PATTERN_D = "d" //день месяца
+     const val PATTERN_D_MMMM = "d/MMMM" //день месяца + день
 
      const val UNDEFINED = -1
 }

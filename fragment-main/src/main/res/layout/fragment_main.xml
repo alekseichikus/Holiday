@@ -60,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/tvInfo"
-                    style="@style/TextTitle"
+                    style="@style/TextLittleTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
@@ -186,7 +186,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="@string/button_go_back"
-                        android:textAppearance="@style/TextTitle"
+                        android:textAppearance="@style/TextLittleTitle"
                         android:textColor="@color/textTertiary"
                         android:visibility="gone"
                         app:icon="@drawable/ic_long_arrow_left"

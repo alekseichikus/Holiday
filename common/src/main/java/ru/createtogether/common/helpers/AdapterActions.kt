@@ -1,8 +1,13 @@
 package ru.createtogether.common.helpers
 
-import androidx.annotation.ColorRes
+import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
 
-interface AdapterActions {
-     fun getData(): List<Any>
-     fun setData(list: List<Any>)
+interface AdapterActions <T> {
+
+     var items: Array<T>
+
+     var action: BaseAction<T>
+
+     fun setData(array: Array<T>)
+     fun getData(): Array<T>
 }

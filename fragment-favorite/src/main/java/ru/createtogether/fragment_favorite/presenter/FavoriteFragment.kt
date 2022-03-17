@@ -13,7 +13,7 @@ import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.baseFragment.base.BaseDropDownListFragment
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday.adapter.HolidayShortAdapter
-import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
+import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
 import ru.createtogether.feature_photo_utils.PhotoModel
@@ -26,7 +26,9 @@ import ru.createtogether.fragment_photo.presenter.PhotoFragment
 class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
     private val binding: FragmentFavoriteBinding by viewBinding()
 
-    private val holidayViewModel: HolidayViewModel by viewModels()
+    private val baseHolidayViewModel: BaseHolidayViewModel by viewModels()
+
+    override val viewModel: FavoriteViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,11 +39,11 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
     }
 
     private fun loadHolidayByIds() {
-        holidayViewModel.loadHolidaysById(holidayViewModel.getFavorites())
+        baseHolidayViewModel.loadHolidaysById(baseHolidayViewModel.getFavorites())
     }
 
     private fun configureViews() {
-        binding.llToolbar.setPaddingTopMenu()
+        binding.llToolbar.setPaddingTop()
     }
 
     private fun initListeners() {
@@ -69,7 +71,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
     }
 
     private fun observeLoadHolidayByIds() {
-        holidayViewModel.holidaysByIdResponse.observe(viewLifecycleOwner) {
+        baseHolidayViewModel.holidaysByIdResponse.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
                     with(binding) {
@@ -125,8 +127,6 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
                     ::onPhotoClick,
                     isFavoriteShow = false
                 )
-            else
-                (adapter as AdapterActions).setData(holidays)
         }
     }
 
@@ -145,9 +145,9 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
 
     private fun changeLike(holidayResponse: HolidayModel) {
         if (holidayResponse.isLike)
-            holidayViewModel.addHolidayLike(holidayResponse.id)
+            baseHolidayViewModel.addHolidayLike(holidayResponse.id)
         else
-            holidayViewModel.removeFavorite(holidayResponse.id)
+            baseHolidayViewModel.removeFavorite(holidayResponse.id)
     }
 
     private fun openLongClick(holiday: HolidayModel) {
@@ -164,8 +164,8 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
                 0 -> openClick(holiday = holiday)
 
                 1 -> {
-                    holidayViewModel.removeFavorite(holiday.id)
-                    holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.filter { it.id != holiday.id }))
+                    baseHolidayViewModel.removeFavorite(holiday.id)
+                    baseHolidayViewModel.holidaysByIdResponse.postValue(Event.success(baseHolidayViewModel.holidaysByIdResponse.value?.data?.filter { it.id != holiday.id }))
                 }
             }
         }.show(childFragmentManager, null)
@@ -189,10 +189,10 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.idName -> {
-                    holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.title }))
+                    baseHolidayViewModel.holidaysByIdResponse.postValue(Event.success(baseHolidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.title }))
                 }
                 R.id.idDate -> {
-                    holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.date }))
+                    baseHolidayViewModel.holidaysByIdResponse.postValue(Event.success(baseHolidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.date }))
                 }
             }
             true

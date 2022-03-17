@@ -14,9 +14,10 @@ import com.bumptech.glide.request.target.Target
 import ru.createtogether.common.helpers.extension.gone
 import ru.createtogether.common.helpers.extension.show
 import ru.createtogether.feature_photo.databinding.ViewPhotoSmallBinding
+import ru.createtogether.feature_photo.helpers.PhotoAdapterListener
 import ru.createtogether.feature_photo_utils.PhotoModel
 
-class PhotoSmallView(context: Context, var onPhotoClick: (PhotoModel) -> Unit) :
+class PhotoSmallView(context: Context, var adapterListener: PhotoAdapterListener) :
     FrameLayout(context) {
 
     private var _binding: ViewPhotoSmallBinding? = null
@@ -44,7 +45,7 @@ class PhotoSmallView(context: Context, var onPhotoClick: (PhotoModel) -> Unit) :
 
     private fun setPhotoClick() {
         binding.root.setOnClickListener {
-            onPhotoClick(photo)
+            adapterListener.onClick(item = photo)
         }
     }
 
