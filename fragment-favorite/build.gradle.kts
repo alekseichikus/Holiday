@@ -67,4 +67,6 @@ dependencies {
 
     implementation(projects.fragmentPhoto)
     implementation(projects.fragmentHoliday)
+
+    implementation(projects.featureAdapterGenerator)
 }

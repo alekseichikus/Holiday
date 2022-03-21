@@ -12,7 +12,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class PhotoViewModel : BaseViewModel() {
-    val photos = MutableLiveData<List<PhotoModel>>()
+    val photos = MutableLiveData<Array<PhotoModel>>()
 
     fun getStateTransparent(swipeBackFraction: Float): Int {
         with((PhotoConstants.FULLY_VISIBLE * (1 - swipeBackFraction)).roundToInt()) {
@@ -24,10 +24,15 @@ class PhotoViewModel : BaseViewModel() {
     }
 
     fun setSelectedPhoto(photo: PhotoModel) {
-        with(photos) {
-            value.orEmpty().find { it.isSelected }?.isSelected = false
-            photo.isSelected = true
-            postValue(value)
+        photos.value?.let { photos ->
+            photos.forEachIndexed { index, photoModel ->
+                if(photoModel.id == photo.id)
+                    photos[index] = photoModel.copy(isSelected = true)
+                else
+                    if(photoModel.isSelected)
+                        photos[index] = photos[index].copy(isSelected = false)
+            }
+            this.photos.postValue(photos)
         }
     }
 

@@ -18,13 +18,13 @@ interface IHolidayFragment {
     fun setOffsetChanged()
 
     fun setPhotosAdapter()
+    fun initPhotoSmallAdapter(images: List<PhotoModel>)
 
-    fun initCharacteristicAdapter(characteristics: Array<CharacteristicModel>)
-    fun initPhotoSmallAdapter(images: Array<PhotoModel>)
+    fun setCharacteristicAdapter()
+    fun initCharacteristicAdapter(characteristics: List<CharacteristicModel>)
 
     fun loadPhoto()
-    fun getCharacteristics(): Array<CharacteristicModel>
-    fun setHoliday()
+    fun getCharacteristics(): List<CharacteristicModel>
 
     fun getHolidayParam(): HolidayModel
 }

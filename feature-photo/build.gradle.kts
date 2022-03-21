@@ -52,4 +52,6 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.11.0")
     implementation("com.facebook.shimmer:shimmer:0.5.0")
+
+    implementation(projects.featureAdapterGenerator)
 }

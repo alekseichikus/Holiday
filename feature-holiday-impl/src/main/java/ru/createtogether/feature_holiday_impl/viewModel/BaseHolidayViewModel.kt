@@ -2,14 +2,15 @@ package ru.createtogether.feature_holiday_impl.viewModel
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.extension.exceptionProcessing
-import ru.createtogether.feature_day_utils.model.DayModel
+import ru.createtogether.common.helpers.extension.withPattern
+import ru.createtogether.feature_day_utils.model.DayOfMonthModel
+import ru.createtogether.feature_day_utils.model.NextDayModel
 import ru.createtogether.feature_holiday_impl.data.HolidayRepository
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,30 +19,34 @@ class BaseHolidayViewModel @Inject constructor(
 ) : ViewModel() {
 
     var holidaysOfDayResponse = MutableLiveData<Event<List<HolidayModel>>>()
-    fun loadHolidaysOfDay(date: String) {
+    fun loadHolidaysOfDay(date: Date) {
+        holidaysOfDayResponse.postValue(Event.loading())
         viewModelScope.launch {
-            holidayRepository.loadHolidays(date = date).exceptionProcessing(holidaysOfDayResponse)
+            holidayRepository.loadHolidays(date = date.withPattern(Constants.DEFAULT_DATE_PATTERN)).exceptionProcessing(holidaysOfDayResponse)
         }
     }
 
     var holidaysByIdResponse = MutableLiveData<Event<List<HolidayModel>>>()
     fun loadHolidaysById(holidaysId: Array<Int>) {
+        holidaysByIdResponse.postValue(Event.loading())
         viewModelScope.launch {
             holidayRepository.loadHolidaysById(holidaysId = holidaysId)
                 .exceptionProcessing(holidaysByIdResponse)
         }
     }
 
-    var nextDateWithHolidaysResponse = MutableLiveData<Event<DayModel>>()
-    fun loadNextDateWithHolidays(date: String) {
+    var nextDateWithHolidaysResponse = MutableLiveData<Event<NextDayModel>>()
+    fun loadNextDateWithHolidays(date: Date) {
+        nextDateWithHolidaysResponse.postValue(Event.loading())
         viewModelScope.launch {
-            holidayRepository.loadNextDateWithHolidays(date = date)
+            holidayRepository.loadNextDateWithHolidays(date = date.withPattern(Constants.DEFAULT_DATE_PATTERN))
                 .exceptionProcessing(nextDateWithHolidaysResponse)
         }
     }
 
-    var holidaysOfMonth = MutableLiveData<Event<List<DayModel>>>()
+    var holidaysOfMonth = MutableLiveData<Event<List<DayOfMonthModel>>>()
     fun loadHolidaysOfMonth(date: String) {
+        holidaysOfMonth.postValue(Event.loading())
         viewModelScope.launch {
             holidayRepository.loadHolidaysOfMonth(date = date).exceptionProcessing(holidaysOfMonth)
         }
@@ -59,7 +64,6 @@ class BaseHolidayViewModel @Inject constructor(
 
     fun setFavorite(holiday: HolidayModel){
         with(holiday){
-            isLike = isLike.not()
             if (isLike)
                 addHolidayLike(holiday.id)
             else

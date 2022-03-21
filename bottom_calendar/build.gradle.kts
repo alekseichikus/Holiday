@@ -67,4 +67,6 @@ dependencies {
     implementation (projects.featureNetworkImpl)
 
     implementation (projects.featureInfoBoard)
+
+    implementation(projects.featureAdapterGenerator)
 }

@@ -60,4 +60,5 @@ dependencies {
     implementation(projects.featureCacheImpl)
 
     implementation(projects.featureHolidayImpl)
+    implementation(projects.featureAppImpl)
 }

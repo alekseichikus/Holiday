@@ -41,9 +41,37 @@
         <entry key="bottom_calendar/src/main/res/layout/bottom_dialog_calendar.xml" value="0.10371376811594203" />
         <entry key="bottom_calendar/src/main/res/layout/item_day.xml" value="0.1" />
         <entry key="bottom_calendar/src/main/res/layout/item_month.xml" value="0.10371376811594203" />
+        <entry key="common/src/main/res/drawable/ic_alien.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_angle_right.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_arrow_left.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_bars.xml" value="0.1055" />
         <entry key="common/src/main/res/drawable/ic_bookmark.xml" value="0.193" />
         <entry key="common/src/main/res/drawable/ic_bookmark_r.xml" value="0.1035" />
+        <entry key="common/src/main/res/drawable/ic_box_full.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_calendar.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_calendar_day.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_clock.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_comments.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_dizzy.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_file_image.xml" value="0.1495" />
+        <entry key="common/src/main/res/drawable/ic_image.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_list_ul.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_long_arrow_alt_down.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_pray.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_rectangle_grey.xml" value="0.1055" />
         <entry key="common/src/main/res/drawable/ic_redo_alt_solid.xml" value="0.1" />
+        <entry key="common/src/main/res/drawable/ic_search.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_share.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_share_square.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_sort.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_sort_numeric_up.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_star.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_times.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_times_circle.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_typewriter.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_users.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_wifi.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/selector_material_button_action.xml" value="0.1055" />
         <entry key="common/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="common/src/main/res/layout/bottom_dialog_base.xml" value="0.1" />
         <entry key="common/src/main/res/layout/item_drop_down.xml" value="0.1" />
@@ -55,9 +83,11 @@
         <entry key="feature-holiday/src/main/res/layout/view_holidays_of_current_day_empty.xml" value="0.1" />
         <entry key="feature-info-board/src/main/res/layout/layout_info_board.xml" value="0.1" />
         <entry key="feature-photo/src/main/res/layout/view_load_photo.xml" value="0.1" />
-        <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.1765625" />
+        <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.5724960327148437" />
         <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.1" />
-        <entry key="fragment-main/src/main/res/layout/fragment_main.xml" value="0.1038500506585613" />
+        <entry key="fragment-holiday/src/main/res/layout/layout_shimmers.xml" value="0.19791666666666666" />
+        <entry key="fragment-main/src/main/res/layout/fragment_main.xml" value="0.22698237487731127" />
+        <entry key="fragment-main/src/main/res/layout/layout_shimmers.xml" value="0.1" />
         <entry key="fragment-photo/src/main/res/layout/fragment_photo.xml" value="0.33541666666666664" />
       </map>
     </option>

@@ -1,6 +1,5 @@
 package ru.createtogether.fragment_photo.presenter
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
@@ -8,26 +7,21 @@ import androidx.annotation.IntRange
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
+import com.example.feature_adapter_generator.BaseAction
+import com.example.feature_adapter_generator.DiffUtilTheSameCallback
+import com.example.feature_adapter_generator.initAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.MainActions
-import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.extension.*
-import ru.createtogether.feature_photo.adapter.PhotoAdapter
-import ru.createtogether.feature_photo.helpers.PhotoAdapterListener
+import ru.createtogether.feature_photo.PhotoSmallView
 import ru.createtogether.feature_photo_utils.PhotoModel
 import ru.createtogether.feature_photo_utils.helpers.PhotoConstants
 import ru.createtogether.fragment_photo.R
 import ru.createtogether.fragment_photo.customView.SwipeBackLayout
 import ru.createtogether.fragment_photo.databinding.FragmentPhotoBinding
 import ru.createtogether.fragment_photo.presenter.viewModel.PhotoViewModel
-import kotlin.math.roundToInt
-
 
 @AndroidEntryPoint
 class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
@@ -50,13 +44,14 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     }
 
     private fun observePhotos() {
-        viewModel.photos.observe(viewLifecycleOwner) {
-            initPhotoSmallAdapter(images = it.map { it.copy() }.toTypedArray())
+        viewModel.photos.observe(viewLifecycleOwner) { images ->
+            initPhotoSmallAdapter(images = images.toList())
         }
     }
 
     private fun initData() {
-        viewModel.photos.value = photos.toList()
+        viewModel.photos.value = photos
+        viewModel.setSelectedPhoto(photo = photos[position])
     }
 
     private fun configureViews() {
@@ -78,20 +73,24 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         binding.clContainer.setPaddingTop()
     }
 
-    private fun initPhotoSmallAdapter(images: Array<PhotoModel>) {
+    private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
         binding.rvPhoto.initAdapter(
             images,
-            PhotoAdapter::class.java,
-            object : PhotoAdapterListener {
+            PhotoSmallView::class.java,
+            object : BaseAction<PhotoModel> {
                 override fun onClick(item: PhotoModel) {
-                    onPhotoClick(item)
+                    viewModel.setSelectedPhoto(photo = item)
+                    loadImage(item)
                 }
-            })
-    }
+            },
+            object : DiffUtilTheSameCallback<PhotoModel> {
+                override fun areItemsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
+                    oldItem.id == newItem.id
 
-    private fun onPhotoClick(photo: PhotoModel) {
-        viewModel.setSelectedPhoto(photo = photo)
-        loadImage(photo)
+                override fun areContentsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
+                    oldItem.isSelected == newItem.isSelected
+            }
+        )
     }
 
     private fun loadImage(image: PhotoModel) {
@@ -165,9 +164,9 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
     companion object {
         private const val PARAM_PHOTOS = "photos"
         private const val PARAM_POSITION = "position"
-        fun getInstance(photos: Array<PhotoModel>, position: Int): PhotoFragment {
+        fun getInstance(photos: List<PhotoModel>, position: Int): PhotoFragment {
             return PhotoFragment().apply {
-                arguments = bundleOf(PARAM_PHOTOS to photos, PARAM_POSITION to position)
+                arguments = bundleOf(PARAM_PHOTOS to photos.toTypedArray(), PARAM_POSITION to position)
             }
         }
     }

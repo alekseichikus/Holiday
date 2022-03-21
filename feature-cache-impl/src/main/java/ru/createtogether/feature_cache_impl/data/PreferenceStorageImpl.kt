@@ -11,12 +11,8 @@ class PreferenceStorageImpl @Inject constructor(context: Context) : PreferenceSt
 
     companion object {
         const val PREFS_NAME = "ru.createTogether.holidays.prefs"
-
-        const val PREF_APP_VERSION_CODE = "pref_app_version_code"
     }
 
     private val prefs =
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
-    override var versionCode by Preferences.StringPreference(prefs, PREF_APP_VERSION_CODE, null)
 }

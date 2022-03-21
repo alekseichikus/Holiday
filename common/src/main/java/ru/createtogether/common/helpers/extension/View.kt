@@ -28,22 +28,17 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import ru.createtogether.common.R
-import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Utils
-import ru.createtogether.common.helpers.baseFragment.base.adapter.BaseAction
 import java.lang.Exception
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 fun View.setPaddingTop() {
@@ -215,21 +210,6 @@ fun Context.shareText(title: String, text: StringBuilder) {
     }, title))
 }
 
-fun <T, K> RecyclerView.initAdapter(
-    data: Array<T>,
-    adapterClass: Class<K>,
-    actionAdapter: BaseAction<T>? = null
-) {
-    if (adapter == null) {
-        adapter = adapterClass.newInstance() as RecyclerView.Adapter<*>
-    }
-    if (adapter is AdapterActions<*>) {
-        (adapter as AdapterActions<T>).setData(data)
-        if (actionAdapter != null)
-            (adapter as AdapterActions<T>).action = actionAdapter
-    }
-}
-
 suspend fun ImageView.loadImage(url: String): Result<Boolean> = suspendCoroutine {
     Glide.with(this)
         .load(url)
@@ -241,7 +221,7 @@ suspend fun ImageView.loadImage(url: String): Result<Boolean> = suspendCoroutine
                 target: Target<Drawable>?,
                 isFirstResource: Boolean
             ): Boolean {
-                it.resumeWithException(e ?: Exception())
+                it.resume(Result.failure(e ?: Exception()))
                 return false
             }
 

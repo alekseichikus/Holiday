@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), MainActions {
     }
 
     private fun initData(){
-        mainViewModel.versionCode = BuildConfig.VERSION_NAME
+        //mainViewModel.versionCode = BuildConfig.VERSION_NAME
     }
 
     private fun hideSystemUI() {

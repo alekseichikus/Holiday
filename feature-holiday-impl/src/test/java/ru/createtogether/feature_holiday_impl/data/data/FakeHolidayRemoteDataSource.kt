@@ -2,7 +2,7 @@ package ru.createtogether.feature_holiday_impl.data.data
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import ru.createtogether.feature_day_utils.model.DayModel
+import ru.createtogether.feature_day_utils.model.DayOfMonthModel
 import ru.createtogether.feature_holiday_impl.data.HolidayRemoteDataSource
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 
@@ -16,11 +16,11 @@ class FakeHolidayRemoteDataSource(var holidays: MutableList<HolidayModel> = muta
         emit(holidays.filter { holidaysId.contains(it.id) })
     }
 
-    override suspend fun loadNextDateWithHolidays(date: String): Flow<DayModel> {
+    override suspend fun loadNextDateWithHolidays(date: String): Flow<DayOfMonthModel> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun loadHolidaysOfMonth(date: String): Flow<List<DayModel>> {
+    override suspend fun loadHolidaysOfMonth(date: String): Flow<List<DayOfMonthModel>> {
         TODO("Not yet implemented")
     }
 }

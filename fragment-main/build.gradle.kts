@@ -81,4 +81,6 @@ dependencies {
     implementation(projects.fragmentAbout)
 
     implementation(projects.bottomCalendar)
+
+    implementation(projects.featureAdapterGenerator)
 }

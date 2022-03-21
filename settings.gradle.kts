@@ -33,3 +33,5 @@ include(":feature-worker-impl")
 include(":feature-notification-impl")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+include(":feature-app-impl")
+include(":feature-adapter-generator")

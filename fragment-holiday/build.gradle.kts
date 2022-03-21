@@ -71,4 +71,6 @@ dependencies {
     implementation(projects.featureCharacteristic)
 
     implementation(projects.fragmentPhoto)
+
+    implementation(projects.featureAdapterGenerator)
 }

@@ -51,4 +51,5 @@ dependencies {
     implementation(projects.common)
 
     implementation(projects.featureCharacteristicUtils)
+    implementation(projects.featureAdapterGenerator)
 }

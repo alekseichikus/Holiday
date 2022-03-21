@@ -1,9 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.arch.core:core-testing:2.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/461b55be7a948fb85528960ae5876148/transformed/core-testing-2.1.0/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/461b55be7a948fb85528960ae5876148/transformed/core-testing-2.1.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/461b55be7a948fb85528960ae5876148/transformed/core-testing-2.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d4c48051afde61deed66de892e27f698/transformed/core-testing-2.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b6de728b8b76ed7b43f70d4e0d0baa26/transformed/core-testing-2.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cd0c09f15254451bd3680e17cd458645/transformed/core-testing-2.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cd0c09f15254451bd3680e17cd458645/transformed/core-testing-2.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cd0c09f15254451bd3680e17cd458645/transformed/core-testing-2.1.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

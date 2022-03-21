@@ -57,4 +57,6 @@ dependencies {
 
     implementation(projects.featurePhotoUtils)
     implementation(projects.featurePhoto)
+
+    implementation(projects.featureAdapterGenerator)
 }

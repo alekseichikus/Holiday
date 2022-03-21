@@ -8,12 +8,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.model.DayModel
 import ru.createtogether.birthday.imageCalendar.model.MonthModel
 import ru.createtogether.bottom_calendar.R
-import ru.createtogether.bottom_calendar.adapter.MonthAdapter
+import ru.createtogether.bottom_calendar.customView.MonthView
 import ru.createtogether.bottom_calendar.databinding.BottomDialogCalendarBinding
+import ru.createtogether.bottom_calendar.helpers.MonthAdapterListener
 import ru.createtogether.bottom_calendar.presenter.viewModel.CalendarViewModel
-import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseBottomDialogFragment
+import com.example.feature_adapter_generator.initAdapter
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
@@ -40,8 +41,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
             Calendar.getInstance().apply {
                 timeInMillis = this@CalendarBottomFragment.time
                 set(Calendar.DAY_OF_MONTH, 1)
-            }, 0
-        , Calendar.getInstance().apply { timeInMillis = this@CalendarBottomFragment.time })
+            }, 0, Calendar.getInstance().apply { timeInMillis = this@CalendarBottomFragment.time })
     }
 
     private fun setListeners() {
@@ -50,7 +50,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
         setCalendarClick()
     }
 
-    private fun setCalendarClick(){
+    private fun setCalendarClick() {
         binding.ivCalendar.setOnClickListener {
             BaseCalendarBottomFragment.getInstance(time = time).show(parentFragmentManager, null)
             dismiss()
@@ -144,10 +144,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
                         baseHolidayViewModel.loadHolidaysOfMonth(
                             Calendar.getInstance().apply {
                                 timeInMillis = this@CalendarBottomFragment.time
-                                set(
-                                    Calendar.DAY_OF_MONTH,
-                                    1
-                                )
+                                set(Calendar.DAY_OF_MONTH, 1)
                             }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
                         )
                     }
@@ -169,10 +166,25 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun initCalendarAdapter(months: List<MonthModel>) {
-        with(binding.rvMonths) {
-            if (adapter == null)
-                adapter = MonthAdapter(initMonths = months, ::onDayClick)
-        }
+        binding.rvMonths.initAdapter(
+            months,
+            MonthView::class.java,
+            object : MonthAdapterListener {
+                override fun onDayClick(day: DayModel) {
+                    this@CalendarBottomFragment.onDayClick(day = day)
+                }
+
+                override fun onClick(item: MonthModel) {
+
+                }
+            }
+        , object : com.example.feature_adapter_generator.DiffUtilTheSameCallback<MonthModel> {
+                override fun areItemsTheSame(oldItem: MonthModel, newItem: MonthModel) =
+                    oldItem == newItem
+
+                override fun areContentsTheSame(oldItem: MonthModel, newItem: MonthModel) =
+                    oldItem.days == newItem.days
+            })
     }
 
     private val time by lazy {
