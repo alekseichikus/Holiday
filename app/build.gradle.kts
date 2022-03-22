@@ -8,15 +8,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
         applicationId = "ru.createtogether.holiday"
-        minSdkVersion(21)
-        targetSdkVersion(31)
-        versionCode = 4
-        versionName = "1.0.2"
-
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
+        versionCode = ConfigData.versionCode
+        versionName = ConfigData.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,12 +68,9 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 
-
-
-    implementation ("androidx.work:work-runtime-ktx:2.6.0")
+    implementation ("androidx.work:work-runtime-ktx:${Versions.workKtx}")
 
     implementation(projects.common)
-
 
     implementation(projects.featureHolidayUtils)
     implementation(projects.featureHolidayImpl)

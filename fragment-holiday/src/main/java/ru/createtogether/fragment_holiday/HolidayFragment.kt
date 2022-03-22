@@ -30,9 +30,10 @@ import ru.createtogether.fragment_photo.presenter.PhotoFragment
 
 @AndroidEntryPoint
 class HolidayFragment : BaseFragment(R.layout.fragment_holiday), IHolidayFragment {
+    override val viewModel: HolidayViewModel by viewModels()
+
     private val binding: FragmentHolidayBinding by viewBinding()
     private val holidayViewModel: BaseHolidayViewModel by viewModels()
-    override val viewModel: HolidayViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -81,7 +82,15 @@ class HolidayFragment : BaseFragment(R.layout.fragment_holiday), IHolidayFragmen
         with(getHolidayParam()) {
             isLike = isLike.not()
             holidayViewModel.setFavorite(holiday = getHolidayParam())
-            viewModel.setFavorite(isLike)
+
+            requireView().showSnackBar(
+                getString(
+                    if (isLike)
+                        R.string.snack_add_to_favorite
+                    else
+                        R.string.snack_remove_from_favorite
+                )
+            )
 
             binding.invalidateAll()
         }

@@ -8,7 +8,6 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.feature_adapter_generator.BaseAction
-import com.example.feature_adapter_generator.DiffUtilTheSameCallback
 import com.example.feature_adapter_generator.initAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,17 +20,36 @@ import ru.createtogether.feature_photo_utils.helpers.PhotoConstants
 import ru.createtogether.fragment_photo.R
 import ru.createtogether.fragment_photo.customView.SwipeBackLayout
 import ru.createtogether.fragment_photo.databinding.FragmentPhotoBinding
+import ru.createtogether.feature_photo_utils.helpers.PhotoUtil
 import ru.createtogether.fragment_photo.presenter.viewModel.PhotoViewModel
 
 @AndroidEntryPoint
-class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
-    private val binding: FragmentPhotoBinding by viewBinding()
+class PhotoFragment : BaseFragment(R.layout.fragment_photo), IPhotoFragment {
+    companion object {
+        private const val PARAM_PHOTOS = "photos"
+        private const val PARAM_POSITION = "position"
+
+        fun getInstance(photos: List<PhotoModel>, position: Int) = PhotoFragment().apply {
+            arguments = bundleOf(PARAM_PHOTOS to photos.toTypedArray(), PARAM_POSITION to position)
+        }
+    }
 
     override val viewModel: PhotoViewModel by viewModels()
 
+    private val binding: FragmentPhotoBinding by viewBinding()
+
+    private val photos by lazy {
+        requireArguments().getSerializable(PARAM_PHOTOS) as Array<PhotoModel>
+    }
+
+    private val position by lazy {
+        requireArguments().getInt(PARAM_POSITION)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initData()
+        initDataBinding()
+        initViewModelData()
         configureViews()
         initListeners()
         initObservers()
@@ -39,17 +57,16 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         loadImage(photos[position])
     }
 
-    private fun initObservers() {
-        observePhotos()
+    override fun onDestroy() {
+        super.onDestroy()
+        (requireActivity() as MainActions).changeNavigationBarColor(R.color.white)
     }
 
-    private fun observePhotos() {
-        viewModel.photos.observe(viewLifecycleOwner) { images ->
-            initPhotoSmallAdapter(images = images.toList())
-        }
+    private fun initDataBinding(){
+        binding.photoFragment = this
     }
 
-    private fun initData() {
+    private fun initViewModelData() {
         viewModel.photos.value = photos
         viewModel.setSelectedPhoto(photo = photos[position])
     }
@@ -60,6 +77,10 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         setBackgroundAlpha(PhotoConstants.FULLY_VISIBLE)
     }
 
+    private fun setPaddingContent() {
+        binding.clContainer.setPaddingTop()
+    }
+
     private fun setBackgroundAlpha(
         @IntRange(
             from = 0,
@@ -67,46 +88,6 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         ) alpha: Int
     ) {
         binding.root.background.alpha = alpha
-    }
-
-    private fun setPaddingContent() {
-        binding.clContainer.setPaddingTop()
-    }
-
-    private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
-        binding.rvPhoto.initAdapter(
-            images,
-            PhotoSmallView::class.java,
-            object : BaseAction<PhotoModel> {
-                override fun onClick(item: PhotoModel) {
-                    viewModel.setSelectedPhoto(photo = item)
-                    loadImage(item)
-                }
-            },
-            object : DiffUtilTheSameCallback<PhotoModel> {
-                override fun areItemsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
-                    oldItem.id == newItem.id
-
-                override fun areContentsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
-                    oldItem.isSelected == newItem.isSelected
-            }
-        )
-    }
-
-    private fun loadImage(image: PhotoModel) {
-        lifecycleScope.launch {
-            val result = binding.photoView.loadImage(image.url)
-            when {
-                result.isSuccess -> {
-                    binding.progressBar.show()
-                    binding.llErrorContainer.gone()
-                }
-                else -> {
-                    binding.progressBar.gone()
-                    binding.llErrorContainer.show()
-                }
-            }
-        }
     }
 
     private fun initListeners() {
@@ -140,34 +121,43 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo) {
         })
     }
 
-    fun onRefreshClick() {
+    override fun onRefreshClick() {
         loadImage(viewModel.getSelectedPhoto())
     }
 
-    fun onCloseClick() {
+    override fun onCloseClick() {
         onBack()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        (requireActivity() as MainActions).changeNavigationBarColor(R.color.white)
+    private fun initObservers() {
+        observePhotos()
     }
 
-    private val photos by lazy {
-        requireArguments().getSerializable(PARAM_PHOTOS) as Array<PhotoModel>
-    }
-
-    private val position by lazy {
-        requireArguments().getInt(PARAM_POSITION)
-    }
-
-    companion object {
-        private const val PARAM_PHOTOS = "photos"
-        private const val PARAM_POSITION = "position"
-        fun getInstance(photos: List<PhotoModel>, position: Int): PhotoFragment {
-            return PhotoFragment().apply {
-                arguments = bundleOf(PARAM_PHOTOS to photos.toTypedArray(), PARAM_POSITION to position)
-            }
+    private fun observePhotos() {
+        viewModel.photos.observe(viewLifecycleOwner) { images ->
+            initPhotoSmallAdapter(images = images.toList())
         }
+    }
+
+    private fun initPhotoSmallAdapter(images: List<PhotoModel>) {
+        binding.rvPhoto.initAdapter(
+            images,
+            PhotoSmallView::class.java,
+            PhotoUtil.getPhotoAdapterListener(onClick = { photo ->
+                viewModel.setSelectedPhoto(photo = photo)
+                loadImage(photo)
+            }),
+            PhotoUtil.getDiffUtilTheSameCallback()
+        )
+    }
+
+    private fun loadImage(image: PhotoModel) {
+        binding.photoView.loadImage(lifecycleScope, image.url, onSuccess = {
+            binding.progressBar.show()
+            binding.llErrorContainer.gone()
+        }, onError = {
+            binding.progressBar.gone()
+            binding.llErrorContainer.show()
+        })
     }
 }

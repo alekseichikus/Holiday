@@ -12,14 +12,13 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -28,13 +27,15 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import ru.createtogether.common.R
 import ru.createtogether.common.helpers.Event
+import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.Utils
 import java.lang.Exception
+import java.lang.NullPointerException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -164,13 +165,12 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
         ).commit()
 }
 
-suspend fun <T> Flow<T>.exceptionProcessing(liveData: MutableLiveData<Event<T>>) {
-    runCatching {
-        collect {
-            liveData.postValue(Event.success(it))
-        }
-    }.onFailure { throwable ->
-        liveData.postValue(Event.error(throwable = throwable))
+suspend fun <T> Flow<T>.exceptionProcessing(stateFlow: MutableStateFlow<Event<T>>) {
+    catch { throwable ->
+        stateFlow.value = Event.error(throwable = throwable)
+    }
+    collect {
+        stateFlow.value = Event.success(it)
     }
 }
 
@@ -183,23 +183,11 @@ fun <T> Response<T>.responseProcessing(): T {
     }
 }
 
-inline fun <T> T.isNotNull() = this != null
+fun <T> T.isNotNull() = this != null
 
-fun View.showSnackBar(snackBarText: String, timeLength: Int) {
+fun View.showSnackBar(snackBarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this, snackBarText, timeLength).run {
         show()
-    }
-}
-
-fun View.setupSnackBar(
-    lifecycleOwner: LifecycleOwner,
-    snackBarEvent: LiveData<Event<Int>>,
-    timeLength: Int
-) {
-    snackBarEvent.observe(lifecycleOwner) {
-        it.data?.let { textId ->
-            showSnackBar(context.getString(textId), timeLength)
-        }
     }
 }
 
@@ -210,31 +198,62 @@ fun Context.shareText(title: String, text: StringBuilder) {
     }, title))
 }
 
-suspend fun ImageView.loadImage(url: String): Result<Boolean> = suspendCoroutine {
-    Glide.with(this)
-        .load(url)
-        .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
-        .addListener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                it.resume(Result.failure(e ?: Exception()))
-                return false
-            }
+fun ImageView.loadImage(
+    lifecycleCoroutineScope: LifecycleCoroutineScope,
+    url: String,
+    onSuccess: (() -> Unit)? = null,
+    onError: (() -> Unit)? = null
+) {
+    lifecycleCoroutineScope.launch {
+        Glide.with(this@loadImage)
+            .load(url)
+            .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
+            .addListener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    onError?.invoke()
+                    return false
+                }
 
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                it.resume(Result.success(true))
-                return false
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    onSuccess?.invoke()
+                    return false
+                }
+            })
+            .into(this@loadImage)
+    }
+}
+
+
+fun <T, K : Event<T>> Fragment.observeStateFlow(
+    stateFlow: StateFlow<K>,
+    onLoading: (() -> Unit)? = null,
+    onSuccess: ((T) -> Unit)? = null,
+    onError: ((Throwable) -> Unit)? = null
+) {
+    lifecycleScope.launch {
+        stateFlow.collect {
+            when (it.status) {
+                Status.LOADING -> onLoading?.invoke()
+                Status.SUCCESS -> {
+                    it.data?.let { data ->
+                        onSuccess?.invoke(data)
+                    } ?: run {
+                        onError?.invoke(NullPointerException())
+                    }
+                }
+                Status.ERROR -> onError?.invoke(it.throwable ?: NullPointerException())
             }
-        })
-        .into(this)
+        }
+    }
 }

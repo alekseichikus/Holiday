@@ -1,13 +1,21 @@
 package ru.createtogether.feature_holiday_impl.data
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import javax.inject.Inject
 
 class HolidayRepositoryImpl @Inject constructor(
     private val holidayLocalRepository: HolidayLocalDataSource,
     private val holidayRemoteDataSource: HolidayRemoteDataSource
 ) : HolidayRepository {
+    override var nextDateWithHolidays = holidayLocalRepository.nextDateWithHolidays
+
+    override var isNotifyAboutHolidays = holidayLocalRepository.isNotifyAboutHolidays
+
     override suspend fun loadHolidays(date: String) = flow {
         holidayRemoteDataSource.loadHolidays(date = date).collect { holidays ->
             holidays.forEach {
@@ -47,8 +55,4 @@ class HolidayRepositoryImpl @Inject constructor(
     override fun isFavorite(holiday: Int) = holidayLocalRepository.isFavorite(holiday)
 
     override fun removeFavorite(holiday: Int) = holidayLocalRepository.removeFavorite(holiday)
-
-    override var nextDateWithHolidays = holidayLocalRepository.nextDateWithHolidays
-
-    override var isNotifyAboutHolidays = holidayLocalRepository.isNotifyAboutHolidays
 }

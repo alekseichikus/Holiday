@@ -6,6 +6,9 @@ import ru.createtogether.feature_day_utils.model.NextDayModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 
 interface HolidayRepository {
+    var nextDateWithHolidays: String?
+    var isNotifyAboutHolidays: Boolean
+
     suspend fun loadHolidays(date: String): Flow<List<HolidayModel>>
     suspend fun loadHolidaysById(holidaysId: Array<Int>): Flow<List<HolidayModel>>
     suspend fun loadNextDateWithHolidays(date: String): Flow<NextDayModel>
@@ -15,7 +18,4 @@ interface HolidayRepository {
     fun addFavorite(holiday: Int)
     fun isFavorite(holiday: Int): Boolean
     fun removeFavorite(holiday: Int)
-
-    var nextDateWithHolidays: String?
-    var isNotifyAboutHolidays: Boolean
 }

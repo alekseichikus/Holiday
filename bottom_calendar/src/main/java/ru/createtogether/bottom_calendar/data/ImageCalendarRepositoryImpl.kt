@@ -1,6 +1,7 @@
 package ru.createtogether.bottom_calendar.data
 
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import org.apache.commons.lang3.time.DateUtils
 import ru.createtogether.bottom_calendar.helpers.CalendarConstants
@@ -14,12 +15,9 @@ import ru.createtogether.feature_network_impl.domain.ErrorHandlerRepository
 import java.util.*
 import javax.inject.Inject
 
-class ImageCalendarRepositoryImpl @Inject constructor(
-    private val errorHandlerRepository: ErrorHandlerRepository
-) : ImageCalendarRepository {
+class ImageCalendarRepositoryImpl @Inject constructor() : ImageCalendarRepository {
 
     override fun loadCalendar(curCalendar: Calendar, startingAt: Int, now: Calendar) = flow {
-        emit(Event.loading())
 
         val months = mutableListOf<MonthModel>()
         (0 until CalendarConstants.MIN_MONTHS).forEach {
@@ -33,13 +31,14 @@ class ImageCalendarRepositoryImpl @Inject constructor(
                 )
             }
         }
-
-        emit(Event.success(months))
-    }.catch { e ->
-        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
+        emit(months)
     }
 
-    private fun getDaysOfMonth(curCalendar: Calendar, startingAt: Int, now: Calendar): List<DayModel> {
+    private fun getDaysOfMonth(
+        curCalendar: Calendar,
+        startingAt: Int,
+        now: Calendar
+    ): List<DayModel> {
         val start = DateUtils.truncate(curCalendar, Calendar.DAY_OF_MONTH)
         if (start.get(Calendar.DAY_OF_WEEK) != (startingAt + 1)) {
             start.set(

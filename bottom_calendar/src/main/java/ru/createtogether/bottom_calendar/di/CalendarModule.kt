@@ -16,6 +16,6 @@ object CalendarModule {
     fun provideHolidayRepository(
         errorHandlerRepository: ErrorHandlerRepository
     ): ImageCalendarRepository {
-        return ImageCalendarRepositoryImpl(errorHandlerRepository)
+        return ImageCalendarRepositoryImpl()
     }
 }

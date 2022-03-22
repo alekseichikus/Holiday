@@ -1,7 +1,8 @@
 package ru.createtogether.common.helpers
 
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface ViewModelActions {
-    val snackBarResponse: MutableLiveData<Event<Int>>
+
 }

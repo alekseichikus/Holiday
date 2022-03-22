@@ -53,4 +53,5 @@ dependencies {
     implementation(projects.featureCountryUtils)
 
     implementation(projects.featurePhotoUtils)
+    implementation(projects.featureAdapterGenerator)
 }

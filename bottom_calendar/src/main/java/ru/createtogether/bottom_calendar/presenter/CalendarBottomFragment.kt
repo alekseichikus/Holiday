@@ -18,6 +18,7 @@ import com.example.feature_adapter_generator.initAdapter
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
+import java.lang.IllegalArgumentException
 import java.util.*
 
 @AndroidEntryPoint
@@ -77,38 +78,27 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun observeHolidaysOfMonthResponse() {
-        baseHolidayViewModel.holidaysOfMonth.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
+        observeStateFlow(baseHolidayViewModel.holidaysOfMonthResponse,
+            onSuccess = { days ->
+                hideContent()
+                binding.rvMonths.show()
 
-                }
+                calendarViewModel.loadCalendarsResponse.value.data?.let {
+                    it.forEach { month ->
+                        month.days.forEach { day ->
 
-                Status.SUCCESS -> {
-                    it.data?.let { days ->
-                        hideContent()
-                        binding.rvMonths.show()
-
-                        calendarViewModel.loadCalendarsResponse.value?.data?.let {
-                            it.forEach { month ->
-                                month.days.forEach { day ->
-
-                                    day.count = days.find {
-                                        it.dateString == day.calendar.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
-                                    }?.holidaysCount ?: 0
-                                }
-                            }
-
-                            initCalendarAdapter(it)
+                            day.count = days.find {
+                                it.dateString == day.calendar.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
+                            }?.holidaysCount ?: 0
                         }
                     }
-                }
 
-                Status.ERROR -> {
-                    hideContent()
-                    showInternetError()
+                    initCalendarAdapter(it)
                 }
-            }
-        }
+            }, onError = { throwable ->
+                hideContent()
+                showInternetError()
+            })
     }
 
     private fun showInternetError() {
@@ -132,29 +122,19 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun observeMonthsResponse() {
-        calendarViewModel.loadCalendarsResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    hideContent()
-                    binding.progressBar.show()
-                }
-
-                Status.SUCCESS -> {
-                    it.data?.let {
-                        baseHolidayViewModel.loadHolidaysOfMonth(
-                            Calendar.getInstance().apply {
-                                timeInMillis = this@CalendarBottomFragment.time
-                                set(Calendar.DAY_OF_MONTH, 1)
-                            }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
-                        )
-                    }
-                }
-
-                Status.ERROR -> {
-
-                }
-            }
-        }
+        observeStateFlow(calendarViewModel.loadCalendarsResponse,
+            onLoading = {
+                hideContent()
+                binding.progressBar.show()
+            },
+            onSuccess = {
+                baseHolidayViewModel.loadHolidaysOfMonth(
+                    Calendar.getInstance().apply {
+                        timeInMillis = this@CalendarBottomFragment.time
+                        set(Calendar.DAY_OF_MONTH, 1)
+                    }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
+                )
+            })
     }
 
     private fun onDayClick(day: DayModel) {
@@ -177,8 +157,7 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
                 override fun onClick(item: MonthModel) {
 
                 }
-            }
-        , object : com.example.feature_adapter_generator.DiffUtilTheSameCallback<MonthModel> {
+            }, object : com.example.feature_adapter_generator.DiffUtilTheSameCallback<MonthModel> {
                 override fun areItemsTheSame(oldItem: MonthModel, newItem: MonthModel) =
                     oldItem == newItem
 

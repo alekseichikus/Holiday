@@ -10,16 +10,16 @@ import com.squareup.moshi.JsonDataException
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
 import ru.createtogether.common.helpers.MainActions
-import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import com.example.feature_adapter_generator.initAdapter
+import ru.createtogether.common.helpers.Event
+import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday.HolidayShortView
-import ru.createtogether.feature_holiday.helpers.HolidayShortAdapterListener
 import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
+import ru.createtogether.feature_holiday_utils.helpers.HolidayUtil
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
-import ru.createtogether.feature_photo_utils.PhotoModel
 import ru.createtogether.fragment_about.AboutFragment
 import ru.createtogether.fragment_favorite.presenter.FavoriteFragment
 import ru.createtogether.fragment_holiday.HolidayFragment
@@ -45,7 +45,13 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
         initListeners()
         initObservers()
 
-        loadHolidaysOfDay()
+        initRequests()
+    }
+
+    private fun initRequests() {
+        if (holidayViewModel.holidaysOfDayResponse.value.status == Status.LOADING) {
+            loadHolidaysOfDay()
+        }
     }
 
     override fun initDataBinding() {
@@ -94,8 +100,15 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     override fun setHolidayViewListener() {
         binding.holidayView.setLikeClickListener { holiday ->
             holidayViewModel.setFavorite(holiday = holiday)
-            viewModel.setFavorite(holiday.isLike)
             binding.invalidateAll()
+            requireView().showSnackBar(
+                getString(
+                    if (holiday.isLike)
+                        R.string.snack_add_to_favorite
+                    else
+                        R.string.snack_remove_from_favorite
+                )
+            )
         }
     }
 
@@ -129,67 +142,48 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     override fun observeLoadHolidaysOfDay() {
-        holidayViewModel.holidaysOfDayResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    setDate(viewModel.getDate())
+        observeStateFlow(holidayViewModel.holidaysOfDayResponse, onLoading = {
+            setDate(viewModel.getDate())
 
-                    showShimmers()
-                    blockUI()
-                    hideContent()
-                }
-                Status.SUCCESS -> {
-                    it.data.let { holidays ->
-                        if (holidays.isNullOrEmpty()) {
-                            holidayViewModel.loadNextDateWithHolidays(date = viewModel.getDate())
-                        } else {
-                            hideShimmers()
-                            unBlockUI()
-                            setContent(holidays = holidays)
-                        }
-                    }
-                }
-                Status.ERROR -> {
-                    hideShimmers()
-                    unBlockUI()
-                    when (it.throwable) {
-                        is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
-                        else -> showInfoBoardInternetError()
-                    }
-                }
+            showShimmers()
+            blockUI()
+            hideContent()
+        }, onSuccess = { holidays ->
+            if (holidays.isEmpty()) {
+                holidayViewModel.loadNextDateWithHolidays(date = viewModel.getDate())
+            } else {
+                hideShimmers()
+                unBlockUI()
+                setContent(holidays = holidays)
             }
-        }
+        }, onError = { throwable ->
+            hideShimmers()
+            unBlockUI()
+            when (throwable) {
+                is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                else -> showInfoBoardInternetError()
+            }
+        })
     }
 
     override fun observeLoadNextDayWithHolidays() {
-        holidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
+        observeStateFlow(holidayViewModel.nextDateWithHolidaysResponse,
+            onSuccess = { day ->
+                unBlockUI()
+                hideShimmers()
 
+                binding.holidaysOfCurrentDayEmptyView.show()
+                binding.holidaysOfCurrentDayEmptyView.initDate(
+                    date = Calendar.getInstance().setDateString(day.dateString).time
+                )
+            }, onError = { throwable ->
+                unBlockUI()
+                hideShimmers()
+                when (throwable) {
+                    is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                    else -> showInfoBoardInternetError()
                 }
-                Status.SUCCESS -> {
-                    unBlockUI()
-                    hideShimmers()
-
-                    it.data?.let { day ->
-                        binding.holidaysOfCurrentDayEmptyView.show()
-                        binding.holidaysOfCurrentDayEmptyView.initDate(
-                            date = Calendar.getInstance().setDateString(day.dateString).time
-                        )
-                    } ?: run {
-                        showInfoBoardSupportError()
-                    }
-                }
-                Status.ERROR -> {
-                    unBlockUI()
-                    hideShimmers()
-                    when (it.throwable) {
-                        is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
-                        else -> showInfoBoardInternetError()
-                    }
-                }
-            }
-        }
+            })
     }
 
     private fun loadHolidaysOfDay() {
@@ -289,17 +283,18 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
         binding.rvAnotherHolidays.initAdapter(
             holidays,
             HolidayShortView::class.java,
-            object : HolidayShortAdapterListener {
-                override fun onLikeClick(holiday: HolidayModel) {
+            HolidayUtil.getHolidayShortAdapterListener(
+                onLikeClick = { holiday ->
                     holidayViewModel.setFavorite(holiday = holiday)
-                    viewModel.setFavorite(holiday.isLike)
-                }
-
-                override fun onLongClick(holiday: HolidayModel) {
-
-                }
-
-                override fun onPhotoClick(holiday: HolidayModel, photo: PhotoModel) {
+                    requireView().showSnackBar(
+                        getString(
+                            if (holiday.isLike)
+                                R.string.snack_add_to_favorite
+                            else
+                                R.string.snack_remove_from_favorite
+                        )
+                    )
+                }, onPhotoClick = { holiday, photo ->
                     onOpen(
                         PhotoFragment.getInstance(
                             photos = holiday.images,
@@ -307,20 +302,11 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
                         ),
                         isAdd = true
                     )
+                }, onClick = { holiday ->
+                    onOpen(HolidayFragment.getInstance(holiday = holiday))
                 }
-
-                override fun onClick(item: HolidayModel) {
-                    onOpen(HolidayFragment.getInstance(holiday = item))
-                }
-            },
-            object :
-                com.example.feature_adapter_generator.DiffUtilTheSameCallback<HolidayModel> {
-                override fun areItemsTheSame(oldItem: HolidayModel, newItem: HolidayModel) =
-                    oldItem.id == newItem.id
-
-                override fun areContentsTheSame(oldItem: HolidayModel, newItem: HolidayModel) =
-                    oldItem.isLike == newItem.isLike
-            }
+            ),
+            HolidayUtil.getHolidayBaseDiffUtilTheSameCallback()
         )
     }
 

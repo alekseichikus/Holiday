@@ -8,15 +8,6 @@ import ru.createtogether.fragment_holiday.R
 
 class HolidayViewModel : BaseViewModel() {
 
-    fun setFavorite(isFavorite: Boolean) {
-        snackBarResponse.value = Event.success(
-            if (isFavorite)
-                R.string.snack_add_to_favorite
-            else
-                R.string.snack_remove_from_favorite
-        )
-    }
-
     fun getShareText(holiday: HolidayModel) = StringBuilder().apply {
         appendLine(holiday.title)
         appendLine(

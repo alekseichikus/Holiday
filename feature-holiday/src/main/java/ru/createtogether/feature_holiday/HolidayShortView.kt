@@ -10,7 +10,7 @@ import com.example.feature_adapter_generator.initAdapter
 import ru.createtogether.common.helpers.extension.setDateString
 import ru.createtogether.common.helpers.extension.withPattern
 import ru.createtogether.feature_holiday.databinding.ViewHolidayShortBinding
-import ru.createtogether.feature_holiday.helpers.HolidayShortAdapterListener
+import ru.createtogether.feature_holiday_utils.helpers.HolidayShortAdapterListener
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_photo.PhotoSmallView
 import ru.createtogether.feature_photo_utils.PhotoModel

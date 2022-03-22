@@ -1,6 +1,6 @@
 package ru.createtogether.common.helpers
 
-class Event<out T>(val status: Status, val data: T?, val error: Int?, val throwable: Throwable? = null) {
+class Event< T>(val status: Status, val data: T?, val throwable: Throwable? = null) {
     companion object {
         fun <T> loading(): Event<T> {
             return Event(Status.LOADING, null, null)
@@ -11,7 +11,7 @@ class Event<out T>(val status: Status, val data: T?, val error: Int?, val throwa
         }
 
         fun <T> error(cause: Int? = null, throwable: Throwable? = null): Event<T> {
-            return Event(Status.ERROR, null, cause, throwable)
+            return Event(Status.ERROR, null, throwable)
         }
     }
 }

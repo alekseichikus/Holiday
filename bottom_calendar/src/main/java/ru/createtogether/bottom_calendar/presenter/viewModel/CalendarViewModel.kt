@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import ru.createtogether.birthday.imageCalendar.model.MonthModel
 import ru.createtogether.bottom_calendar.domain.ImageCalendarRepository
 import ru.createtogether.common.helpers.Event
+import ru.createtogether.common.helpers.extension.exceptionProcessing
+import ru.createtogether.common.helpers.extension.withPattern
 import java.util.*
 import javax.inject.Inject
 
@@ -16,18 +18,17 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(private val imageCalendarRepository: ImageCalendarRepository) :
     ViewModel() {
 
-    val loadCalendarsResponse = MutableLiveData<Event<List<MonthModel>>>()
+    private var _loadCalendarsResponse = MutableStateFlow<Event<List<MonthModel>>>(Event.loading())
+    val loadCalendarsResponse: StateFlow<Event<List<MonthModel>>> = _loadCalendarsResponse
 
     fun loadCalendars(curCalendar: Calendar, startingAt: Int, now: Calendar) {
-        loadCalendarsResponse.value = Event.loading()
+        _loadCalendarsResponse.value = Event.loading()
         viewModelScope.launch {
             imageCalendarRepository.loadCalendar(
                 curCalendar = curCalendar,
                 startingAt = startingAt,
                 now = now
-            ).collect {
-                loadCalendarsResponse.postValue(it)
-            }
+            ).exceptionProcessing(_loadCalendarsResponse)
         }
     }
 }

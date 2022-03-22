@@ -7,13 +7,12 @@ import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.example.feature_adapter_generator.initAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.baseFragment.base.BaseDropDownListFragment
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday.HolidayShortView
-import ru.createtogether.feature_holiday.helpers.HolidayShortAdapterListener
+import ru.createtogether.feature_holiday_utils.helpers.HolidayShortAdapterListener
 import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
@@ -36,7 +35,14 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
         configureViews()
         initListeners()
         initObservers()
-        loadHolidayByIds()
+
+        initRequests()
+    }
+
+    private fun initRequests() {
+        if (holidayViewModel.holidaysByIdResponse.value.status == Status.LOADING) {
+            loadHolidayByIds()
+        }
     }
 
     private fun loadHolidayByIds() {
@@ -72,49 +78,43 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
     }
 
     private fun observeLoadHolidayByIds() {
-        holidayViewModel.holidaysByIdResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    with(binding) {
-                        progressBar.show()
-                        infoBoardView.gone()
-                        rvHolidaysShort.gone()
-                        ivSort.gone()
-                    }
-                }
-                Status.SUCCESS -> {
-                    with(binding) {
-                        progressBar.gone()
-                        if (it.data.isNullOrEmpty()) {
-                            rvHolidaysShort.gone()
-                            infoBoardView.show()
-                            infoBoardView.setContent(
-                                getString(R.string.title_favorites),
-                                getString(R.string.empty_favorite_description),
-                                R.drawable.ic_bookmark_r
-                            )
-                        } else {
-                            rvHolidaysShort.show()
-                            infoBoardView.gone()
-                            ivSort.show()
-                            initHolidaysAdapter(it.data!!)
-                        }
-                    }
-                }
-                Status.ERROR -> {
-                    with(binding) {
-                        progressBar.gone()
-                        rvHolidaysShort.gone()
-                        infoBoardView.show()
-                        infoBoardView.setContent(
-                            getString(R.string.error_internet),
-                            getString(R.string.error_internet_description),
-                            R.drawable.ic_alien, R.string.button_try_again
-                        )
-                    }
+        observeStateFlow(holidayViewModel.holidaysByIdResponse, onLoading = {
+            with(binding) {
+                progressBar.show()
+                infoBoardView.gone()
+                rvHolidaysShort.gone()
+                ivSort.gone()
+            }
+        }, onSuccess = { holidays ->
+            with(binding) {
+                progressBar.gone()
+                if (holidays.isEmpty()) {
+                    rvHolidaysShort.gone()
+                    infoBoardView.show()
+                    infoBoardView.setContent(
+                        getString(R.string.title_favorites),
+                        getString(R.string.empty_favorite_description),
+                        R.drawable.ic_bookmark_r
+                    )
+                } else {
+                    rvHolidaysShort.show()
+                    infoBoardView.gone()
+                    ivSort.show()
+                    initHolidaysAdapter(holidays = holidays)
                 }
             }
-        }
+        }, onError = { throwable ->
+            with(binding) {
+                progressBar.gone()
+                rvHolidaysShort.gone()
+                infoBoardView.show()
+                infoBoardView.setContent(
+                    getString(R.string.error_internet),
+                    getString(R.string.error_internet_description),
+                    R.drawable.ic_alien, R.string.button_try_again
+                )
+            }
+        })
     }
 
     private fun initHolidaysAdapter(holidays: List<HolidayModel>) {
@@ -124,7 +124,15 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
             object : HolidayShortAdapterListener {
                 override fun onLikeClick(holiday: HolidayModel) {
                     holidayViewModel.setFavorite(holiday = holiday)
-                    //viewModel.setFavorite(holiday.isLike)
+
+                    requireView().showSnackBar(
+                        getString(
+                            if (holiday.isLike)
+                                R.string.snack_add_to_favorite
+                            else
+                                R.string.snack_remove_from_favorite
+                        )
+                    )
                 }
 
                 override fun onLongClick(holiday: HolidayModel) {
@@ -142,7 +150,7 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
 
                             1 -> {
                                 holidayViewModel.removeFavorite(holiday.id)
-                                holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.filter { it.id != holiday.id }))
+                                //holidayViewModel.holidaysByIdResponse.value = Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.filter { it.id != holiday.id })
                             }
                         }
                     }.show(childFragmentManager, null)
@@ -189,19 +197,17 @@ class FavoriteFragment : BaseFragment(R.layout.fragment_favorite) {
         popupMenu.show()
 
         popupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.idName -> {
-                    holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.title }))
-                }
-                R.id.idDate -> {
-                    holidayViewModel.holidaysByIdResponse.postValue(Event.success(holidayViewModel.holidaysByIdResponse.value?.data?.sortedBy { it.date }))
-                }
-            }
+            holidayViewModel.setHolidaysById(
+                holidays = viewModel.updateSort(
+                    it.itemId,
+                    holidayViewModel.holidaysByIdResponse.value
+                )
+            )
             true
         }
     }
 
-    companion object{
-        fun getInstance() = FavoriteFragment().apply {  }
+    companion object {
+        fun getInstance() = FavoriteFragment().apply { }
     }
 }

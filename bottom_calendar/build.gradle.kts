@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = ConfigData.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(31)
+        minSdk = ConfigData.minSdkVersion
+        targetSdk = ConfigData.targetSdkVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,22 +40,17 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
-    implementation("junit:junit:4.13.2")
-    implementation("androidx.test.ext:junit:1.1.3")
-    implementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation("com.google.dagger:hilt-android:2.38.1")
     kapt("com.google.dagger:hilt-compiler:2.37")
     kapt("androidx.hilt:hilt-compiler:1.0.0")
 
-    implementation ("androidx.fragment:fragment-ktx:1.3.6")
+    implementation (Dir.fragmentKtx)
 
-
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation (Dir.glide)
     implementation ("org.apache.commons:commons-lang3:3.10")
 
     implementation (projects.common)
