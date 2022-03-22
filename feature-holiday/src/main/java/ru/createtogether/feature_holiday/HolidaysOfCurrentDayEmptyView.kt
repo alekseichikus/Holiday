@@ -15,8 +15,8 @@ class HolidaysOfCurrentDayEmptyView(context: Context, attrs: AttributeSet?) :
     private var _binding: ViewHolidaysOfCurrentDayEmptyBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var goToClick: (date: String) -> Unit
-    private lateinit var date: String
+    private lateinit var goToClick: (date: Date) -> Unit
+    private lateinit var date: Date
 
     init {
         _binding =
@@ -25,22 +25,20 @@ class HolidaysOfCurrentDayEmptyView(context: Context, attrs: AttributeSet?) :
         initView()
     }
 
-    fun setGoToClickListener(goToClick: (date: String) -> Unit){
+    fun setGoToClickListener(goToClick: (date: Date) -> Unit){
         this.goToClick = goToClick
     }
 
-    fun initDate(date: String) {
+    fun initDate(date: Date) {
         this.date = date
 
-        with(Calendar.getInstance().setDateString(date = date)) {
-            with(binding) {
+        with(binding) {
 
-                val day = time.withPattern(Constants.PATTERN_D)
-                val month = time.withPattern(Constants.PATTERN_MMMM)
+            val day = date.withPattern(Constants.PATTERN_D)
+            val month = date.withPattern(Constants.PATTERN_MMMM)
 
-                tvHolidayEmptyDate.text = "$day\n$month"
-                mbMoveToDate.text = context.getString(R.string.go_to, "$day $month")
-            }
+            tvHolidayEmptyDate.text = "$day\n$month"
+            mbMoveToDate.text = context.getString(R.string.go_to, "$day $month")
         }
     }
 

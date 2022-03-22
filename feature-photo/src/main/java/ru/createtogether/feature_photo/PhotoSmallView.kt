@@ -11,27 +11,22 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.example.feature_adapter_generator.BaseAction
+import com.example.feature_adapter_generator.ViewAction
 import ru.createtogether.common.helpers.extension.gone
 import ru.createtogether.common.helpers.extension.show
 import ru.createtogether.feature_photo.databinding.ViewPhotoSmallBinding
 import ru.createtogether.feature_photo_utils.PhotoModel
 
-class PhotoSmallView(context: Context, var onPhotoClick: (PhotoModel) -> Unit) :
-    FrameLayout(context) {
+class PhotoSmallView constructor(context: Context, var adapterListener: BaseAction<PhotoModel>) :
+    FrameLayout(context), ViewAction<PhotoModel> {
 
-    private var _binding: ViewPhotoSmallBinding? = null
-    private val binding get() = _binding!!
+    private val binding = ViewPhotoSmallBinding.inflate(LayoutInflater.from(context), this, false)
 
     private lateinit var photo: PhotoModel
 
     init {
-        _binding = ViewPhotoSmallBinding.inflate(LayoutInflater.from(context), this, false)
         addView(binding.root)
-        initView()
-    }
-
-    private fun initView() {
-        initListeners()
     }
 
     private fun initListeners() {
@@ -44,11 +39,11 @@ class PhotoSmallView(context: Context, var onPhotoClick: (PhotoModel) -> Unit) :
 
     private fun setPhotoClick() {
         binding.root.setOnClickListener {
-            onPhotoClick(photo)
+            adapterListener.onClick(item = photo)
         }
     }
 
-    fun setPhoto(photo: PhotoModel) {
+    private fun setPhoto(photo: PhotoModel) {
         this.photo = photo
         loadPreview()
         setSelectedStyle()
@@ -83,5 +78,10 @@ class PhotoSmallView(context: Context, var onPhotoClick: (PhotoModel) -> Unit) :
             })
             .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
             .into(binding.ivPhoto)
+    }
+
+    override fun initData(item: PhotoModel) {
+        setPhoto(photo = item)
+        initListeners()
     }
 }

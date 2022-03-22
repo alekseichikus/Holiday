@@ -7,5 +7,5 @@ import java.util.*
 
 
 interface ImageCalendarRepository {
-    fun loadCalendar(curCalendar: Calendar, startingAt: Int, now: Calendar): Flow<Event<List<MonthModel>>>
+    fun loadCalendar(curCalendar: Calendar, startingAt: Int, now: Calendar): Flow<List<MonthModel>>
 }

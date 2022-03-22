@@ -1,227 +1,197 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootHolidayView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinator"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="holiday"
+            type="ru.createtogether.feature_holiday_utils.model.HolidayModel" />
+
+        <variable
+            name="holidayFragment"
+            type="ru.createtogether.fragment_holiday.IHolidayFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:elevation="0dp">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:contentScrim="@android:color/transparent"
-                app:expandedTitleMarginEnd="48dp"
-                app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-                app:scrimAnimationDuration="100">
+                android:background="@android:color/transparent"
+                app:elevation="0dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/backgroundFill"
-                    app:layout_collapseMode="parallax">
+                    app:contentScrim="@android:color/transparent"
+                    app:expandedTitleMarginEnd="48dp"
+                    app:expandedTitleMarginStart="48dp"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                    app:scrimAnimationDuration="100">
 
-                    <ImageView
-                        android:id="@+id/imageView"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="320dp"
-                        android:scaleType="centerCrop"
-                        android:transitionName="holidayPreview"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_height="400dp"
+                        android:background="@color/backgroundFill"
+                        app:layout_collapseMode="parallax">
 
-                    <ImageView
-                        android:id="@+id/ivPreview"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/ic_image"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/textTertiary" />
+                        <androidx.constraintlayout.motion.widget.MotionLayout
+                            android:id="@+id/mlViewPhotoLoad"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:layoutDescription="@xml/photo_load_scene"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center_horizontal"
-                        android:indeterminateTint="@color/textTertiary"
-                        android:secondaryProgressTint="@color/backgroundOrange"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                            <ru.createtogether.feature_photo.PhotoLoadView
+                                android:id="@+id/viewPhotoLoad"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+                        </androidx.constraintlayout.motion.widget.MotionLayout>
 
-                    <TextView
-                        android:id="@+id/tvImageAbsent"
-                        style="@style/TextTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center_horizontal"
-                        android:text="@string/image_absent"
-                        android:textColor="@color/textSecondary"
-                        android:textStyle="normal"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvCharacteristic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="24dp"
+                            android:alpha="0.7"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            tools:itemCount="3"
+                            tools:listitem="@layout/view_characteristic" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCharacteristic"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:layout_marginBottom="8dp"
-                        android:alpha="0.7"
-                        android:paddingStart="8dp"
-                        android:clipToPadding="false"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        tools:itemCount="3"
-                        tools:listitem="@layout/view_characteristic" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+                        android:layout_height="16dp"
+                        android:layout_gravity="bottom"
+                        android:background="@drawable/background_border_top"
+                        android:backgroundTint="@color/backgroundContent" />
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/vSheet"
-                    android:layout_width="36dp"
-                    android:layout_height="4dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/ic_rectangle_grey" />
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <LinearLayout
-                    android:id="@+id/llTitleContainer"
+                    android:id="@+id/llNestedContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="16dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvTitle"
-                        style="@style/TextTitle"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        tools:ignore="UseCompoundDrawables">
+
+                        <TextView
+                            android:id="@+id/tvTitle"
+                            style="@style/TextMiddleTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginVertical="12dp"
+                            android:layout_weight="1"
+                            android:text="@{holiday.title}"
+                            tools:text="@string/button_try_again" />
+
+                        <ImageView
+                            android:id="@+id/ivLike"
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/button_favorite"
+                            android:onClick="@{(v) -> holidayFragment.onLikeClick()}"
+                            android:padding="16dp"
+                            android:src="@{holiday.like ? @drawable/ic_bookmark : @drawable/ic_bookmark_r}"
+                            app:tint="@color/textTertiary" />
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/clPhotosContainer"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginVertical="12dp"
-                        android:layout_weight="1"
-                        android:textSize="24dp"
-                        tools:text="@string/button_try_again" />
+                        android:background="@drawable/background_border"
+                        android:backgroundTint="@color/backgroundFill"
+                        android:padding="8dp">
 
-                    <ImageView
-                        android:id="@+id/ivLike"
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="16dp"
-                        android:src="@drawable/ic_bookmark"
-                        app:tint="@color/textTertiary" />
-                </LinearLayout>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvPhoto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:listitem="@layout/view_photo_small" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/clPhotosContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginVertical="12dp"
-                    android:background="@drawable/background_border"
-                    android:backgroundTint="@color/backgroundFill"
-                    android:padding="8dp">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvPhoto"
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        style="@style/TextDefault"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clipToPadding="false"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:listitem="@layout/view_photo_small" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@{holiday.description}"
+                        android:visibility='@{holiday.description.isEmpty() ? View.GONE : View.VISIBLE}'
+                        tools:text="@string/support_description" />
 
-                <TextView
-                    android:id="@+id/tvDescription"
-                    style="@style/TextDefault"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="8dp"
-                    tools:text="@string/support_description" />
+                </LinearLayout>
 
-            </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        </androidx.core.widget.NestedScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/mlTopMenuContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layoutDescription="@xml/top_menu_container_scene"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clButtonContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/ivClose"
+                style="@style/BaseCircleButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/button_close"
+                android:onClick="@{(v) -> holidayFragment.onCloseClick()}"
+                android:src="@drawable/ic_times" />
 
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:background="@drawable/background_circle"
-            android:backgroundTint="@color/backgroundButtonTransparentLight"
-            android:foreground="@drawable/background_ripple_circle"
-            android:padding="10dp"
-            android:src="@drawable/ic_times"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textTertiary" />
-
-        <ImageView
-            android:id="@+id/ivShare"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:background="@drawable/background_circle"
-            android:backgroundTint="@color/backgroundButtonTransparentLight"
-            android:foreground="@drawable/background_ripple_circle"
-            android:padding="10dp"
-            android:src="@drawable/ic_share_square"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/textSecondary" />
-
+            <ImageView
+                android:id="@+id/ivShare"
+                style="@style/BaseCircleButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/button_share"
+                android:onClick="@{(v) -> holidayFragment.onShareClick()}"
+                android:src="@drawable/ic_share_square" />
+        </androidx.constraintlayout.motion.widget.MotionLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

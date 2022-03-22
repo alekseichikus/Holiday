@@ -1,0 +1,34 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="adapterListener"
+            type="ru.createtogether.feature_photo.helpers.PhotoLoadListener" />
+    </data>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/flShimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundFill"
+        android:onClick="@{(v) -> adapterListener.onClick()}">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mbAgain"
+            style="@style/Button.Base.Text.Action"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{(v) -> adapterListener.onAgainClick()}"
+            android:text="@string/button_try_again"
+            android:visibility="gone"
+            app:icon="@drawable/ic_redo_alt_solid" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</layout>

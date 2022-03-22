@@ -1,46 +1,50 @@
 <resources>
-  <string name="app_name">Календарь праздников</string>
-  <string name="description_test">Очень важная запись, описывающая праздник</string>
-  <string name="category_type_religion">Религиозный</string>
-  <string name="category_type_family">Семейный</string>
-  <string name="title_favorites">Мои избранные</string>
-  <string name="empty">Пусто</string>
-  <string name="empty_favorite_description">Праздников в избранном нет</string>
+    <string name="app_name">Календарь праздников</string>
+    <string name="description_test">Очень важная запись, описывающая праздник</string>
+    <string name="category_type_religion">Религиозный</string>
+    <string name="category_type_family">Семейный</string>
+    <string name="title_favorites">Мои избранные</string>
+    <string name="empty">Пусто</string>
+    <string name="empty_favorite_description">Праздников в избранном нет</string>
 
-  <!-- Сеть -->
-  <string name="network_connection_error">Отсутствует подключение к интернету.</string>
-  <string name="default_error_message">Что-то сломалось. Если ошибка повторяется, то напишите нам на нашу почту</string>
-  <string name="category_type_another">Прочее</string>
-  <string name="empty_holidays_on_day">На этот день праздники не найдены</string>
-  <string name="error_internet">Что-то пошло не так</string>
-  <string name="error_internet_description">Проверьте подключение к интернету или попробуйте чуть позже</string>
-  <string name="error_tech_support_description">Пожалуйста, обратитесь с данной проблемой в тех. поддержку</string>
-  <string name="in_development">В разработке</string>
-  <string name="version">Версия</string>
-  <string name="feedback">Обратная связь</string>
-  <string name="support_description">Дайте нам знать, если у вас возникли проблемы с приложением</string>
-  <string name="support">Поддержка</string>
-  <string name="button_remove">Удалить</string>
-  <string name="button_open">Открыть</string>
-  <string name="button_try_again">Попробовать снова</string>
-  <string name="button_go_back">Вернуться</string>
-  <string name="image_absent">Изображение отсутствует</string>
-  <string name="type">Тип</string>
-  <string name="date">Дата</string>
-  <string name="country">Страна</string>
-  <string name="country_russia">Россия</string>
-  <string name="international">Международный</string>
-  <string name="holiday">Праздник</string>
-  <string name="example_fio">Мокшанцев Алексей Алексеевич</string>
+    <!-- Сеть -->
+    <string name="network_connection_error">Отсутствует подключение к интернету.</string>
+    <string name="default_error_message">Что-то сломалось. Если ошибка повторяется, то напишите нам на нашу почту</string>
+    <string name="category_type_another">Прочее</string>
+    <string name="empty_holidays_on_day">На этот день праздники не найдены</string>
+    <string name="error_internet">Что-то пошло не так</string>
+    <string name="error_internet_description">Проверьте подключение к интернету или попробуйте чуть позже</string>
+    <string name="error_tech_support_description">Пожалуйста, обратитесь с данной проблемой в тех. поддержку</string>
+    <string name="in_development">В разработке</string>
+    <string name="version">Версия</string>
+    <string name="feedback">Обратная связь</string>
+    <string name="support_description">Дайте нам знать, если у вас возникли проблемы с приложением</string>
+    <string name="support">Поддержка</string>
+    <string name="button_remove">Удалить</string>
+    <string name="button_open">Открыть</string>
+    <string name="button_try_again">Попробовать снова</string>
+    <string name="button_share">Поделиться</string>
+    <string name="button_close">Закрыть</string>
+    <string name="button_favorite">Избранное</string>
+    <string name="button_go_back">Вернуться</string>
+    <string name="image_absent">Изображение отсутствует</string>
+    <string name="type">Тип</string>
+    <string name="date">Дата</string>
+    <string name="country">Страна</string>
+    <string name="holiday">Праздник</string>
+    <string name="example_fio">Мокшанцев Алексей Алексеевич</string>
 
-  <string name="version_code">Версия: %s</string>
+    <string name="version_code">Версия: %s</string>
 
-  <string name="current_day_empty_first">Сегодня праздников нет, но</string>
-  <string name="current_day_empty_ыусщтв">они начинаются снова!</string>
-  <string name="go_to">Перейти к %s</string>
+    <string name="current_day_empty_first">Сегодня праздников нет, но</string>
+    <string name="current_day_empty_ыусщтв">они начинаются снова!</string>
+    <string name="go_to">Перейти к %s</string>
 
-  <string name="coming_soon">Раздел в разработке</string>
+    <string name="coming_soon">Раздел в разработке</string>
 
-  <string name="snack_add_to_favorite">Добавлено в избранное</string>
-  <string name="snack_remove_from_favorite">Удалено из избранного</string>
+    <string name="snack_add_to_favorite">Добавлено в избранное</string>
+    <string name="snack_remove_from_favorite">Удалено из избранного</string>
+
+    <string name="country_russia">Россия</string>
+    <string name="international">Международный</string>
 </resources>

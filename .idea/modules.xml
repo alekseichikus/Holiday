@@ -5,7 +5,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Holiday.iml" filepath="$PROJECT_DIR$/.idea/modules/Holiday.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Holiday.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Holiday.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bottom_calendar/Holiday.bottom_calendar.iml" filepath="$PROJECT_DIR$/.idea/modules/bottom_calendar/Holiday.bottom_calendar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Holiday.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/Holiday.buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/Holiday.common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/Holiday.common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature_adapter_generator/Holiday.feature-adapter-generator.iml" filepath="$PROJECT_DIR$/.idea/modules/feature_adapter_generator/Holiday.feature-adapter-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-app-impl/Holiday.feature-app-impl.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-app-impl/Holiday.feature-app-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-cache-impl/Holiday.feature-cache-impl.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-cache-impl/Holiday.feature-cache-impl.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-characteristic/Holiday.feature-characteristic.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-characteristic/Holiday.feature-characteristic.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/feature-characteristic-utils/Holiday.feature-characteristic-utils.iml" filepath="$PROJECT_DIR$/.idea/modules/feature-characteristic-utils/Holiday.feature-characteristic-utils.iml" />

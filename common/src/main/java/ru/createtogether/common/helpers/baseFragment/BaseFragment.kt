@@ -5,10 +5,13 @@ import android.view.*
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import ru.createtogether.common.helpers.ViewModelActions
 import ru.createtogether.common.helpers.extension.hideKeyboard
 
 
 abstract class BaseFragment(@LayoutRes val contentLayoutId: Int) : Fragment() {
+
+  abstract val viewModel: ViewModelActions
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     return inflater.inflate(contentLayoutId, container, false)
@@ -19,9 +22,5 @@ abstract class BaseFragment(@LayoutRes val contentLayoutId: Int) : Fragment() {
   override fun onDestroyView() {
     super.onDestroyView()
     hideKeyboard()
-  }
-
-  companion object {
-
   }
 }

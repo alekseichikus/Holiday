@@ -1,45 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/background_border"
-    android:backgroundTint="@color/backgroundFill"
-    android:layout_marginEnd="8dp"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="8dp">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/textTertiary"
-        tools:src="@drawable/ic_dizzy" />
-
-    <TextView
-        android:id="@+id/tvText"
-        style="@style/TextDescription"
-        android:layout_width="0dp"
-        android:visibility="gone"
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="16dp"
-        android:layout_weight="1"
-        tools:text="@string/date" />
+        android:orientation="horizontal"
+        android:background="@drawable/background_border"
+        android:backgroundTint="@color/backgroundFill"
+        android:layout_marginEnd="8dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp">
 
-    <TextView
-        android:id="@+id/tvDescription"
-        style="@style/TextDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="3"
-        android:textColor="@color/textPrimary"
-        tools:text="Ул. Коммунистическая" />
-</LinearLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/textTertiary"
+            tools:src="@drawable/ic_dizzy" />
+
+        <TextView
+            android:id="@+id/tvText"
+            style="@style/TextDescription"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            tools:text="@string/date" />
+
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/TextDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:textColor="@color/textPrimary"
+            tools:text="Ул. Коммунистическая" />
+    </LinearLayout>
+</layout>

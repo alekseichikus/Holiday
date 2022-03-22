@@ -10,9 +10,21 @@
         <item name="android:textSize">12dp</item>
     </style>
 
-    <style name="TextTitle">
+    <style name="TextLittleTitle">
         <item name="android:textColor">@color/textPrimary</item>
         <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextMiddleTitle">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextBigTitle">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">28dp</item>
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

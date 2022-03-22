@@ -19,7 +19,7 @@ class BaseCalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-        binding.root.date = time
+        binding.calendarView.date = time
     }
 
     private fun setListeners() {
@@ -27,7 +27,7 @@ class BaseCalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dial
     }
 
     private fun setCalendarDayClick() {
-        binding.root.setOnDateChangeListener { view, year, month, dayOfMonth ->
+        binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
             parentFragmentManager.setFragmentResult(CALENDAR_REQUEST, bundleOf(DATE_LONG to GregorianCalendar( year, month, dayOfMonth ).time.time))
             dismiss()
         }

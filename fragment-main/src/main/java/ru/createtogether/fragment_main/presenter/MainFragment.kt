@@ -1,26 +1,25 @@
 package ru.createtogether.fragment_main.presenter
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.work.*
+import com.squareup.moshi.JsonDataException
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
-import ru.createtogether.common.helpers.AdapterActions
 import ru.createtogether.common.helpers.MainActions
-import ru.createtogether.common.helpers.Status
-import ru.createtogether.common.helpers.Utils
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
+import com.example.feature_adapter_generator.initAdapter
+import ru.createtogether.common.helpers.Event
+import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.extension.*
-import ru.createtogether.feature_holiday.adapter.HolidayShortAdapter
-import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
+import ru.createtogether.feature_holiday.HolidayShortView
+import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
+import ru.createtogether.feature_holiday_utils.helpers.HolidayUtil
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
-import ru.createtogether.feature_photo_utils.PhotoModel
-import ru.createtogether.feature_worker_impl.HolidayWorker
-import ru.createtogether.feature_worker_impl.di.WorkerModule
 import ru.createtogether.fragment_about.AboutFragment
 import ru.createtogether.fragment_favorite.presenter.FavoriteFragment
 import ru.createtogether.fragment_holiday.HolidayFragment
@@ -28,74 +27,69 @@ import ru.createtogether.fragment_main.R
 import ru.createtogether.fragment_main.databinding.FragmentMainBinding
 import ru.createtogether.fragment_main.presenter.viewModel.MainViewModel
 import ru.createtogether.fragment_photo.presenter.PhotoFragment
+import java.lang.IllegalArgumentException
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
-class MainFragment : BaseFragment(R.layout.fragment_main) {
+class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     private val binding: FragmentMainBinding by viewBinding()
-    private val holidayViewModel: HolidayViewModel by viewModels()
-    private val mainViewModel: MainViewModel by viewModels()
+    private val holidayViewModel: BaseHolidayViewModel by viewModels()
+    override val viewModel: MainViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initDataBinding()
+
         configureViews()
         initListeners()
         initObservers()
 
-        loadHolidaysOfDay()
-        holidayViewModel.loadNextDayWithHolidays(mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN))
+        initRequests()
     }
 
-    private fun configureViews() {
-        binding.clScrollContainer.setPaddingTopMenu()
+    private fun initRequests() {
+        if (holidayViewModel.holidaysOfDayResponse.value.status == Status.LOADING) {
+            loadHolidaysOfDay()
+        }
     }
 
-    private fun initListeners() {
-        setCalendarClick()
+    override fun initDataBinding() {
+        binding.mainFragment = this
+    }
+
+    override fun configureViews() {
+        binding.clScrollContainer.setPaddingTop()
+    }
+
+    override fun initListeners() {
         setCalendarResult()
-        setFavoriteClick()
-        setHolidayClick()
-        setHolidayListener()
-        setTryAgainClick()
-        setSearchClick()
-        setMenuClick()
-        setGoBackClick()
-        setGoToNextDayClick()
+        setHolidayViewListener()
+        setInfoBoardViewListener()
+        setHolidaysOfCurrentDayEmptyListener()
     }
 
-    private fun setGoBackClick() {
-        binding.mbGoBack.setOnClickListener {
-            mainViewModel.currentDate = Calendar.getInstance().time
-            holidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(mainViewModel.currentDate))
+    override fun onGoBackClick() {
+        viewModel.setDate(Calendar.getInstance().time)
+        loadHolidaysOfDay()
+    }
+
+    override fun onMenuClick() {
+        onOpen(AboutFragment.getInstance())
+    }
+
+    override fun onSearchClick() {
+        (requireActivity() as MainActions).showSnackBar(R.string.coming_soon)
+    }
+
+    override fun setHolidaysOfCurrentDayEmptyListener() {
+        binding.holidaysOfCurrentDayEmptyView.setGoToClickListener { date ->
+            viewModel.setDate(date = date)
+            loadHolidaysOfDay()
         }
     }
 
-    private fun setGoToNextDayClick() {
-        binding.holidaysOfCurrentDayEmptyView.setGoToClickListener {
-            mainViewModel.currentDate = Calendar.getInstance().setDateString(it).time
-            holidayViewModel.loadHolidaysOfDay(
-                Utils.convertDateToDateString(
-                    mainViewModel.currentDate
-                )
-            )
-        }
-    }
-
-    private fun setMenuClick() {
-        binding.ivMenu.setOnClickListener {
-            onOpen(AboutFragment.getInstance())
-        }
-    }
-
-    private fun setSearchClick() {
-        binding.ivSearch.setOnClickListener {
-            (requireActivity() as MainActions).showSnackBar(R.string.coming_soon)
-        }
-    }
-
-    private fun setTryAgainClick() {
+    override fun setInfoBoardViewListener() {
         binding.infoBoardView.setInfoBoardListener(object : InfoBoardListener {
             override fun onActionClick() {
                 loadHolidaysOfDay()
@@ -103,137 +97,150 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         })
     }
 
-    private fun setHolidayListener() {
-        binding.holidayView.setLikeClickListener {
-            changeLike(holiday = it)
+    override fun setHolidayViewListener() {
+        binding.holidayView.setLikeClickListener { holiday ->
+            holidayViewModel.setFavorite(holiday = holiday)
+            binding.invalidateAll()
+            requireView().showSnackBar(
+                getString(
+                    if (holiday.isLike)
+                        R.string.snack_add_to_favorite
+                    else
+                        R.string.snack_remove_from_favorite
+                )
+            )
         }
     }
 
-    private fun setFavoriteClick() {
-        binding.ivFavorite.setOnClickListener {
-            onOpen(FavoriteFragment.getInstance())
-        }
+    override fun onFavoriteClick() {
+        onOpen(FavoriteFragment.getInstance())
     }
 
-    private fun setHolidayClick() {
-        binding.holidayView.setOnClickListener {
-            onOpen(HolidayFragment.getInstance(holiday = binding.holidayView.holiday))
-        }
+    override fun onHolidayClick() {
+        onOpen(HolidayFragment.getInstance(holiday = binding.holidayView.holiday))
     }
 
-    private fun setCalendarResult() {
+    override fun onCalendarClick() {
+        CalendarBottomFragment.getInstance(viewModel.getDate().time)
+            .show(childFragmentManager, CalendarBottomFragment.javaClass.name)
+    }
+
+    override fun setCalendarResult() {
         childFragmentManager.setFragmentResultListener(
             CalendarBottomFragment.CALENDAR_REQUEST, viewLifecycleOwner
         ) { _, result ->
-            result.getLong(CalendarBottomFragment.DATE_LONG).let {
-                val calendar = Calendar.getInstance()
-                calendar.timeInMillis = it
-                mainViewModel.currentDate = calendar.time
+            result.getLong(CalendarBottomFragment.DATE_LONG).let { timeInMillis ->
+                viewModel.setDate(Date().apply { time = timeInMillis })
                 loadHolidaysOfDay()
             }
         }
     }
 
-    private fun changeLike(holiday: HolidayModel) {
-        (requireActivity() as MainActions).showSnackBar(
-            if (holiday.isLike)
-                R.string.snack_add_to_favorite
-            else
-                R.string.snack_remove_from_favorite
-        )
+    override fun initObservers() {
+        observeLoadHolidaysOfDay()
+        observeLoadNextDayWithHolidays()
+    }
 
-        if (holiday.isLike)
-            holidayViewModel.addHolidayLike(holiday.id)
-        else
-            holidayViewModel.removeHolidayLike(holiday.id)
+    override fun observeLoadHolidaysOfDay() {
+        observeStateFlow(holidayViewModel.holidaysOfDayResponse, onLoading = {
+            setDate(viewModel.getDate())
+
+            showShimmers()
+            blockUI()
+            hideContent()
+        }, onSuccess = { holidays ->
+            if (holidays.isEmpty()) {
+                holidayViewModel.loadNextDateWithHolidays(date = viewModel.getDate())
+            } else {
+                hideShimmers()
+                unBlockUI()
+                setContent(holidays = holidays)
+            }
+        }, onError = { throwable ->
+            hideShimmers()
+            unBlockUI()
+            when (throwable) {
+                is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                else -> showInfoBoardInternetError()
+            }
+        })
+    }
+
+    override fun observeLoadNextDayWithHolidays() {
+        observeStateFlow(holidayViewModel.nextDateWithHolidaysResponse,
+            onSuccess = { day ->
+                unBlockUI()
+                hideShimmers()
+
+                binding.holidaysOfCurrentDayEmptyView.show()
+                binding.holidaysOfCurrentDayEmptyView.initDate(
+                    date = Calendar.getInstance().setDateString(day.dateString).time
+                )
+            }, onError = { throwable ->
+                unBlockUI()
+                hideShimmers()
+                when (throwable) {
+                    is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                    else -> showInfoBoardInternetError()
+                }
+            })
     }
 
     private fun loadHolidaysOfDay() {
-        holidayViewModel.loadHolidaysOfDay(Utils.convertDateToDateString(mainViewModel.currentDate))
+        holidayViewModel.loadHolidaysOfDay(viewModel.getDate())
     }
 
-    private fun initObservers() {
-        observeLoadHolidaysOfDay()
-        observeLoadNextDayWithHolidays()
-        observeLoadNextDateWithHolidays()
+    override fun setDate(date: Date) {
+        val day = date.withPattern(Constants.PATTERN_D)
+        val month = date.withPattern(Constants.PATTERN_MMMM)
+        binding.tvPostInfo.text = "$day $month"
     }
 
-    private fun setDate(calendar: Calendar) {
-        with(calendar) {
-            val day = time.withPattern(Constants.PATTERN_D)
-            val month = time.withPattern(Constants.PATTERN_MMMM)
-            binding.tvPostInfo.text = "$day $month"
-        }
+    override fun blockUI() {
+        binding.ivCalendar.isEnabled = false
     }
 
-    private fun observeLoadHolidaysOfDay() {
-        holidayViewModel.holidaysOfDayResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
-
-                    showShimmers(isShow = true)
-                    hideContent()
-                    binding.ivCalendar.isEnabled = false
-                }
-                Status.SUCCESS -> {
-                    it.data?.let { holidays ->
-                        if (holidays.isEmpty())
-                            mainViewModel.currentDate.let { date ->
-                                holidayViewModel.loadNextDateWithHolidays(
-                                    Utils.convertDateToDateString(
-                                        date
-                                    )
-                                )
-                            }
-                        else {
-                            setContent(holidays = holidays)
-                            showShimmers(isShow = false)
-                            binding.ivCalendar.isEnabled = true
-                        }
-                    } ?: run {
-                        showShimmers(isShow = false)
-                        binding.ivCalendar.isEnabled = true
-                        showTechSupportError()
-                    }
-                }
-                Status.ERROR -> {
-                    showShimmers(isShow = false)
-                    binding.ivCalendar.isEnabled = true
-                    showInternetError()
-                }
-            }
-        }
+    override fun unBlockUI() {
+        binding.ivCalendar.isEnabled = true
     }
 
-    private fun showTechSupportError() {
+    override fun showInfoBoardSupportError() {
+        showInfoBoard(
+            getString(R.string.error_internet),
+            getString(R.string.error_tech_support_description),
+            R.drawable.ic_alien, R.string.button_try_again
+        )
+    }
+
+    override fun showInfoBoardInternetError() {
+        showInfoBoard(
+            getString(R.string.error_internet),
+            getString(R.string.error_internet_description),
+            R.drawable.ic_alien, R.string.button_try_again
+        )
+    }
+
+    override fun showInfoBoard(
+        title: String,
+        text: String,
+        @DrawableRes icon: Int?,
+        @StringRes titleButton: Int?
+    ) {
         with(binding.infoBoardView) {
-            setContent(
-                getString(R.string.error_internet),
-                getString(R.string.error_tech_support_description),
-                R.drawable.ic_alien, R.string.button_try_again
-            )
+            setContent(title, text, icon, titleButton)
             show()
         }
     }
 
-    private fun showInternetError() {
-        with(binding.infoBoardView) {
-            binding.infoBoardView.setContent(
-                getString(R.string.error_internet),
-                getString(R.string.error_internet_description),
-                R.drawable.ic_alien, R.string.button_try_again
-            )
-            show()
-        }
+    override fun showShimmers() {
+        binding.layoutShimmers.show()
     }
 
-    private fun showShimmers(isShow: Boolean) {
-        binding.layoutHolidayShimmer.root.isVisible = isShow
-        binding.layoutHolidayShortShimmer.root.isVisible = isShow
+    override fun hideShimmers() {
+        binding.layoutShimmers.gone()
     }
 
-    private fun hideContent() {
+    override fun hideContent() {
         with(binding) {
             holidayView.gone()
             cvAnotherHolidays.gone()
@@ -243,113 +250,64 @@ class MainFragment : BaseFragment(R.layout.fragment_main) {
         }
     }
 
-    private fun setContent(holidays: List<HolidayModel>, date: String? = null) {
-        with(binding) {
-            if (holidays.isEmpty()) {
-                date?.let { holidaysOfCurrentDayEmptyView.initDate(date = it) }
-                holidaysOfCurrentDayEmptyView.show()
-            } else {
-                with(holidayView) {
-                    show()
-                    initHoliday(holiday = holidays.first())
-                }
-                if (holidays.size > 1) {
-                    cvAnotherHolidays.show()
-                    initHolidaysShortAdapter(holidays = holidays.filterIndexed { index, _ -> index != 0 })
-                }
-                binding.mbGoBack.isVisible = mainViewModel.currentDate.withPattern(Constants.DEFAULT_DATE_PATTERN) != Calendar.getInstance().time.withPattern(
-                    Constants.DEFAULT_DATE_PATTERN
-                )
-            }
+    override fun setContent(holidays: List<HolidayModel>, date: Date?) {
+        if (holidays.isEmpty()) {
+            date?.let { updateHolidaysOfCurrentDayEmptyView(it) }
+        } else {
+            updateHolidayView(holiday = holidays.first())
+            updateHolidayShortView(holidays = holidays)
+            binding.mbGoBack.isVisible =
+                viewModel.getDate().compareTo(Calendar.getInstance().time) == 0
         }
     }
 
-    private fun observeLoadNextDayWithHolidays() {
-        holidayViewModel.nextDayWithHolidaysResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
-                }
-                Status.SUCCESS -> {
-                    binding.ivCalendar.isEnabled = true
-                    showShimmers(isShow = false)
+    private fun updateHolidaysOfCurrentDayEmptyView(date: Date) {
+        date.let { binding.holidaysOfCurrentDayEmptyView.initDate(date = it) }
+        binding.holidaysOfCurrentDayEmptyView.isVisible = false
+    }
 
-                    it.data?.let { data ->
-                        data.dateString?.let {
-                            binding.holidaysOfCurrentDayEmptyView.show()
-                            binding.holidaysOfCurrentDayEmptyView.initDate(date = it)
-                        } ?: run {
-                            showTechSupportError()
-                        }
-                    } ?: run {
-                        showTechSupportError()
-                    }
-                }
-                Status.ERROR -> {
-                    binding.ivCalendar.isEnabled = true
-                    showShimmers(isShow = false)
-                    showInternetError()
-                }
-            }
+    private fun updateHolidayView(holiday: HolidayModel) {
+        binding.holidayView.show()
+        binding.holidayView.initHoliday(holiday = holiday)
+    }
+
+    private fun updateHolidayShortView(holidays: List<HolidayModel>) {
+        with(holidays.size > 1) {
+            binding.cvAnotherHolidays.isVisible = this
+            if (this)
+                initHolidaysShortAdapter(holidays = holidays.filterIndexed { index, _ -> index != 0 })
         }
     }
 
-    private fun observeLoadNextDateWithHolidays() {
-        holidayViewModel.nextDateWithHolidaysResponse.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.LOADING -> {
-                    setDate(Calendar.getInstance().apply { time = mainViewModel.currentDate })
+    override fun initHolidaysShortAdapter(holidays: List<HolidayModel>) {
+        binding.rvAnotherHolidays.initAdapter(
+            holidays,
+            HolidayShortView::class.java,
+            HolidayUtil.getHolidayShortAdapterListener(
+                onLikeClick = { holiday ->
+                    holidayViewModel.setFavorite(holiday = holiday)
+                    requireView().showSnackBar(
+                        getString(
+                            if (holiday.isLike)
+                                R.string.snack_add_to_favorite
+                            else
+                                R.string.snack_remove_from_favorite
+                        )
+                    )
+                }, onPhotoClick = { holiday, photo ->
+                    onOpen(
+                        PhotoFragment.getInstance(
+                            photos = holiday.images,
+                            position = holiday.images.indexOf(photo)
+                        ),
+                        isAdd = true
+                    )
+                }, onClick = { holiday ->
+                    onOpen(HolidayFragment.getInstance(holiday = holiday))
                 }
-                Status.SUCCESS -> {
-                    it.data?.dateString?.let { date ->
-                        holidayViewModel.nextDayWithHolidays = date
-                    }
-                    WorkerModule.runHolidayWorker(requireContext())
-                }
-                Status.ERROR -> {
-
-                }
-            }
-        }
-    }
-
-    private fun setCalendarClick() {
-        binding.ivCalendar.setOnClickListener {
-            CalendarBottomFragment.getInstance(mainViewModel.currentDate.time)
-                .show(childFragmentManager, CalendarBottomFragment.javaClass.name)
-        }
-    }
-
-    private fun initHolidaysShortAdapter(holidays: List<HolidayModel>) {
-        with(binding.rvAnotherHolidays) {
-            if (adapter == null)
-                adapter = HolidayShortAdapter(
-                    holidays.toMutableList(),
-                    ::openClick,
-                    ::changeLike,
-                    ::openLongClick,
-                    ::onPhotoClick
-                )
-            else
-                (adapter as AdapterActions).setData(holidays)
-        }
-    }
-
-    private fun onPhotoClick(holiday: HolidayModel, photo: PhotoModel) {
-        holiday.images?.let {
-            onOpen(
-                PhotoFragment.getInstance(photos = it.toTypedArray(), position = it.indexOf(photo)),
-                isAdd = true
-            )
-        }
-    }
-
-    private fun openClick(holiday: HolidayModel) {
-        onOpen(HolidayFragment.getInstance(holiday = holiday))
-    }
-
-    private fun openLongClick(holidayResponse: HolidayModel) {
-
+            ),
+            HolidayUtil.getHolidayBaseDiffUtilTheSameCallback()
+        )
     }
 
     companion object {

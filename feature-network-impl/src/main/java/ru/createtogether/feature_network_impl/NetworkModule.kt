@@ -3,13 +3,12 @@ package ru.createtogether.feature_network_impl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Module
@@ -20,7 +19,7 @@ object NetworkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.baseurl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create())
             .client(okHttpClient)
             .build()
     }

@@ -1,78 +1,58 @@
 package ru.createtogether.feature_holiday_impl.data
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
-import ru.createtogether.common.helpers.Event
-import ru.createtogether.feature_holiday_impl.domain.HolidayRepository
+import kotlinx.coroutines.launch
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
-import ru.createtogether.feature_network_impl.domain.ErrorHandlerRepository
-import ru.createtogether.feature_holiday_api.api.HolidayApi
 import javax.inject.Inject
 
 class HolidayRepositoryImpl @Inject constructor(
-    private val holidayApi: HolidayApi,
-    private val errorHandlerRepository: ErrorHandlerRepository
+    private val holidayLocalRepository: HolidayLocalDataSource,
+    private val holidayRemoteDataSource: HolidayRemoteDataSource
 ) : HolidayRepository {
-    override fun loadHolidays(date: String) = flow<Event<List<HolidayModel>>> {
-        emit(Event.loading())
+    override var nextDateWithHolidays = holidayLocalRepository.nextDateWithHolidays
 
-        val apiResponse = holidayApi.loadHolidays(date)
-        if (apiResponse.isSuccessful && apiResponse.body() != null) {
-            emit(Event.success(apiResponse.body()?.sortedByDescending { it.description }))
-            return@flow
+    override var isNotifyAboutHolidays = holidayLocalRepository.isNotifyAboutHolidays
+
+    override suspend fun loadHolidays(date: String) = flow {
+        holidayRemoteDataSource.loadHolidays(date = date).collect { holidays ->
+            holidays.forEach {
+                it.isLike = holidayLocalRepository.isFavorite(it.id)
+            }
+            emit(holidays)
         }
-        val errorMessage = withContext(Dispatchers.IO) { apiResponse.errorBody()?.string() }
-        emit(Event.error(errorHandlerRepository.handleErrorMessage(errorMessage)))
-    }.catch { e ->
-        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
     }
 
-    override fun loadHolidaysByIds(holidays: Array<Int>) = flow {
-        emit(Event.loading())
-
-        val apiResponse = holidayApi.loadHolidaysByIds(
-            ru.createtogether.feature_holiday_utils.model.HolidayByIdsRequest(
-                holidays = holidays.toList()
-            )
-        )
-        if (apiResponse.isSuccessful && apiResponse.body() != null) {
-            emit(Event.success(apiResponse.body()?.sortedBy { it.title }?.sortedBy { it.date }))
-            return@flow
+    override suspend fun loadHolidaysById(holidaysId: Array<Int>) = flow {
+        holidayRemoteDataSource.loadHolidaysById(holidaysId = holidaysId).collect { holidays ->
+            holidays.forEach {
+                it.isLike = holidayLocalRepository.isFavorite(it.id)
+            }
+            emit(holidays)
         }
-
-        val errorMessage = withContext(Dispatchers.IO) { apiResponse.errorBody()?.string() }
-        emit(Event.error(errorHandlerRepository.handleErrorMessage(errorMessage)))
-    }.catch { e ->
-        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
     }
 
-    override fun loadNextDayWithHolidays(date: String) = flow {
-        emit(Event.loading())
-
-        val apiResponse = holidayApi.loadNextDayWithHolidays(date)
-        if (apiResponse.isSuccessful && apiResponse.body() != null) {
-            emit(Event.success(apiResponse.body()))
-            return@flow
+    override suspend fun loadNextDateWithHolidays(date: String) = flow {
+        holidayRemoteDataSource.loadNextDateWithHolidays(date = date).collect { day ->
+            emit(day)
         }
-        val errorMessage = withContext(Dispatchers.IO) { apiResponse.errorBody()?.string() }
-        emit(Event.error(errorHandlerRepository.handleErrorMessage(errorMessage)))
-    }.catch { e ->
-        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
     }
 
-    override fun loadHolidaysOfMonth(date: String) = flow {
-        emit(Event.loading())
-
-        val apiResponse = holidayApi.loadHolidaysOfMonth(date)
-        if (apiResponse.isSuccessful && apiResponse.body() != null) {
-            emit(Event.success(apiResponse.body()))
-            return@flow
+    override suspend fun loadHolidaysOfMonth(date: String) = flow {
+        holidayRemoteDataSource.loadHolidaysOfMonth(date = date).collect { days ->
+            emit(days)
         }
-        val errorMessage = withContext(Dispatchers.IO) { apiResponse.errorBody()?.string() }
-        emit(Event.error(errorHandlerRepository.handleErrorMessage(errorMessage)))
-    }.catch { e ->
-        emit(Event.error(errorHandlerRepository.handleErrorResponse(e)))
     }
+
+    override fun getFavorites() = holidayLocalRepository.getFavorites()
+
+    override fun addFavorite(holiday: Int) {
+        holidayLocalRepository.addFavorite(holidayId = holiday)
+    }
+
+    override fun isFavorite(holiday: Int) = holidayLocalRepository.isFavorite(holiday)
+
+    override fun removeFavorite(holiday: Int) = holidayLocalRepository.removeFavorite(holiday)
 }

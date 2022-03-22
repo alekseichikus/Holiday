@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import ru.createtogether.common.helpers.extension.onBack
-import ru.createtogether.common.helpers.extension.setPaddingTopMenu
-import ru.createtogether.feature_holiday_impl.viewModel.HolidayViewModel
+import ru.createtogether.common.helpers.extension.setPaddingTop
+import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.fragment_about.databinding.FragmentAboutBinding
 import ru.createtogether.fragment_about.presenter.viewModel.AboutViewModel
 
@@ -20,8 +20,8 @@ import ru.createtogether.fragment_about.presenter.viewModel.AboutViewModel
 class AboutFragment : BaseFragment(R.layout.fragment_about) {
     private val binding: FragmentAboutBinding by viewBinding()
 
-    private val aboutViewModel: AboutViewModel by viewModels()
-    private val holidayViewModel: HolidayViewModel by viewModels()
+    override val viewModel: AboutViewModel by viewModels()
+    private val baseHolidayViewModel: BaseHolidayViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,15 +32,15 @@ class AboutFragment : BaseFragment(R.layout.fragment_about) {
     }
 
     private fun setHolidayNotifications(){
-        binding.swHolidayNotifications.isChecked = holidayViewModel.isNotifyAboutHolidays
+        binding.swHolidayNotifications.isChecked = baseHolidayViewModel.isNotifyAboutHolidays
     }
 
     private fun setVersion() {
-        binding.tvVersion.text = getString(R.string.version_code, aboutViewModel.versionCode)
+        binding.tvVersion.text = getString(R.string.version_code, viewModel.versionCode)
     }
 
     private fun configureViews() {
-        binding.root.setPaddingTopMenu()
+        binding.root.setPaddingTop()
     }
 
     private fun initListeners() {
@@ -53,7 +53,7 @@ class AboutFragment : BaseFragment(R.layout.fragment_about) {
 
     private fun setNotifyAboutHolidaysCheckedChange(){
         binding.swHolidayNotifications.setOnCheckedChangeListener { buttonView, isChecked ->
-            holidayViewModel.isNotifyAboutHolidays = isChecked
+            baseHolidayViewModel.isNotifyAboutHolidays = isChecked
         }
     }
 

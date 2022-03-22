@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 
 class HolidayShortDiffUtilCallback(
-    private var oldList: List<HolidayModel>,
-    private var newList: List<HolidayModel>
+    private var oldList: Array<HolidayModel>,
+    private var newList: Array<HolidayModel>
 ) :
     DiffUtil.Callback() {
     override fun getOldListSize(): Int {

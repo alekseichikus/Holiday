@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.25277777777777777" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday222/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2855" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday222/bottom_calendar/src/main/res/layout/bottom_dialog_base_calendar.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday222/bottom_calendar/src/main/res/layout/bottom_dialog_calendar.xml" value="0.36666666666666664" />
@@ -36,10 +37,68 @@
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/common/src/main/res/layout/item_drop_down.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/common/src/main/res/menu/popup_sort.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Aleksei/AndroidStudioProjects/Holiday3/fragment-main/src/main/res/layout/fragment_main.xml" value="0.18854166666666666" />
+        <entry key="bottom_calendar/src/main/res/layout/bottom_dialog_base_calendar.xml" value="0.1" />
+        <entry key="bottom_calendar/src/main/res/layout/bottom_dialog_calendar.xml" value="0.10371376811594203" />
+        <entry key="bottom_calendar/src/main/res/layout/item_day.xml" value="0.1" />
+        <entry key="bottom_calendar/src/main/res/layout/item_month.xml" value="0.10371376811594203" />
+        <entry key="common/src/main/res/drawable/ic_alien.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_angle_right.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_arrow_left.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_bars.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_bookmark.xml" value="0.193" />
+        <entry key="common/src/main/res/drawable/ic_bookmark_r.xml" value="0.1035" />
+        <entry key="common/src/main/res/drawable/ic_box_full.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_calendar.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_calendar_day.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_clock.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_comments.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_dizzy.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_file_image.xml" value="0.1495" />
+        <entry key="common/src/main/res/drawable/ic_image.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_list_ul.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_long_arrow_alt_down.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_pray.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_rectangle_grey.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_redo_alt_solid.xml" value="0.1" />
+        <entry key="common/src/main/res/drawable/ic_search.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_share.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_share_square.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_sort.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_sort_numeric_up.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_star.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_times.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_times_circle.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_typewriter.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_users.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/ic_wifi.xml" value="0.1055" />
+        <entry key="common/src/main/res/drawable/selector_material_button_action.xml" value="0.1055" />
+        <entry key="common/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="common/src/main/res/layout/bottom_dialog_base.xml" value="0.1" />
+        <entry key="common/src/main/res/layout/item_drop_down.xml" value="0.1" />
+        <entry key="feature-characteristic/src/main/res/layout/view_characteristic.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/item_holiday_shimmer.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/item_holiday_short_shimmer.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/view_holiday.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/view_holiday_short.xml" value="0.1" />
+        <entry key="feature-holiday/src/main/res/layout/view_holidays_of_current_day_empty.xml" value="0.1" />
+        <entry key="feature-info-board/src/main/res/layout/layout_info_board.xml" value="0.1" />
+        <entry key="feature-photo/src/main/res/layout/view_load_photo.xml" value="0.1" />
+        <entry key="feature-photo/src/main/res/layout/view_photo_small.xml" value="0.5724960327148437" />
+        <entry key="fragment-holiday/src/main/res/layout/fragment_holiday.xml" value="0.1" />
+        <entry key="fragment-holiday/src/main/res/layout/layout_shimmers.xml" value="0.19791666666666666" />
+        <entry key="fragment-main/src/main/res/layout/fragment_main.xml" value="0.22698237487731127" />
+        <entry key="fragment-main/src/main/res/layout/layout_shimmers.xml" value="0.1" />
+        <entry key="fragment-photo/src/main/res/layout/fragment_photo.xml" value="0.33541666666666664" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="EntryPointsManager">
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="dagger.Binds" />
+      <item index="1" class="java.lang.String" itemvalue="dagger.Module" />
+    </list>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

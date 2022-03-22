@@ -1,9 +1,11 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="@style/TextDefault"
-    android:layout_width="match_parent"
-    android:ellipsize="start"
-    android:foreground="?attr/selectableItemBackground"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    tools:text="Ул. Коммунистическая" />
+<layout>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/TextDefault"
+        android:layout_width="match_parent"
+        android:ellipsize="start"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        tools:text="Ул. Коммунистическая" />
+</layout>
