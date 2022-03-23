@@ -166,11 +166,12 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
 }
 
 suspend fun <T> Flow<T>.exceptionProcessing(stateFlow: MutableStateFlow<Event<T>>) {
-    catch { throwable ->
+    runCatching {
+        collect {
+            stateFlow.value = Event.success(it)
+        }
+    }.onFailure { throwable ->
         stateFlow.value = Event.error(throwable = throwable)
-    }
-    collect {
-        stateFlow.value = Event.success(it)
     }
 }
 

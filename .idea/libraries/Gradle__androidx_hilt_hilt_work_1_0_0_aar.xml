@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.hilt:hilt-work:1.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09ad195fcc1a4c7d3b78142a68060da3/transformed/jetified-hilt-work-1.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/09ad195fcc1a4c7d3b78142a68060da3/transformed/jetified-hilt-work-1.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09ad195fcc1a4c7d3b78142a68060da3/transformed/jetified-hilt-work-1.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/76ba993ada672f999910b4bf8c86d9ef/transformed/jetified-hilt-work-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/76ba993ada672f999910b4bf8c86d9ef/transformed/jetified-hilt-work-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/76ba993ada672f999910b4bf8c86d9ef/transformed/jetified-hilt-work-1.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

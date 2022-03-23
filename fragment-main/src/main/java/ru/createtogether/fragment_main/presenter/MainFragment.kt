@@ -49,9 +49,7 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     private fun initRequests() {
-        if (holidayViewModel.holidaysOfDayResponse.value.status == Status.LOADING) {
-            loadHolidaysOfDay()
-        }
+        loadHolidaysOfDay()
     }
 
     override fun initDataBinding() {
