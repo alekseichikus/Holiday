@@ -52,6 +52,7 @@ class HolidayRepositoryImpl @Inject constructor(
         holidayLocalRepository.addFavorite(holidayId = holiday)
     }
 
+
     override fun isFavorite(holiday: Int) = holidayLocalRepository.isFavorite(holiday)
 
     override fun removeFavorite(holiday: Int) = holidayLocalRepository.removeFavorite(holiday)
