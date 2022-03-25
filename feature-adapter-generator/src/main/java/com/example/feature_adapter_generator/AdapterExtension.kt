@@ -4,12 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import java.lang.ClassCastException
 
-fun <T, V : ViewGroup, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.initAdapter(
+fun <T, V, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.initAdapter(
     data: Collection<T>,
     view: Class<V>,
     baseAction: BA? = null,
     diffUtil: DU
-) {
+) where V : ViewGroup, V : ViewAction<T> {
     val baseAdapter: BaseAdapter<T, V, BaseAction<T>>
 
     if (adapter == null) {
