@@ -8,6 +8,6 @@ class BaseViewHolder<V : ViewGroup>(val view: V) : RecyclerView.ViewHolder(view)
         if (view is VA)
             view.initData(item = item)
         else
-            throw NoSuchMethodException("View")
+            throw NoSuchMethodException("Use viewAction interface in your customView")
     }
 }

@@ -2,6 +2,7 @@ package com.example.feature_adapter_generator
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import java.lang.ClassCastException
 
 fun <T, V : ViewGroup, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.initAdapter(
     data: Collection<T>,
@@ -20,7 +21,7 @@ fun <T, V : ViewGroup, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> Recy
                 if (view.interfaces.contains(ViewAction::class.java))
                     action = it
                 else
-                    throw IllegalArgumentException("View must have a viewAction interface")
+                    throw ClassCastException("View must have a viewAction interface")
             }
         }
         adapter = baseAdapter
