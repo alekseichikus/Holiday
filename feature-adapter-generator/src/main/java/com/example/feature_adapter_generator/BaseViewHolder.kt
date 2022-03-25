@@ -1,10 +1,13 @@
 package com.example.feature_adapter_generator
 
-import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class BaseViewHolder<T>(val view: View) : RecyclerView.ViewHolder(view) {
-    fun bind(item: T) {
-        (view as ViewAction<T>).initData(item = item)
+class BaseViewHolder<V : ViewGroup>(val view: V) : RecyclerView.ViewHolder(view) {
+    inline fun <T, reified VA : ViewAction<T>> bind(item: T) {
+        if (view is VA)
+            view.initData(item = item)
+        else
+            throw NoSuchMethodException("View")
     }
 }

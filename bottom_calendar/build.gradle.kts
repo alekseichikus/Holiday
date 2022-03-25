@@ -59,6 +59,8 @@ dependencies {
 
     implementation (projects.featureDayUtils)
 
+    implementation(project(":common"))
+
     implementation (projects.featureNetworkImpl)
 
     implementation (projects.featureInfoBoard)

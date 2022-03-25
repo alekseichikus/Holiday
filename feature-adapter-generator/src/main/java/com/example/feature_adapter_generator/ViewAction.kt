@@ -1,5 +1,5 @@
 package com.example.feature_adapter_generator
 
-interface ViewAction<T> {
+interface ViewAction<in T> {
     fun initData(item: T)
 }

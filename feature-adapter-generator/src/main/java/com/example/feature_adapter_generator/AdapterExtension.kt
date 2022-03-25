@@ -1,21 +1,22 @@
 package com.example.feature_adapter_generator
 
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-fun <T, V, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.initAdapter(
+fun <T, V : ViewGroup, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.initAdapter(
     data: Collection<T>,
     view: Class<V>,
-    actionAdapter: BA? = null,
+    baseAction: BA? = null,
     diffUtil: DU
 ) {
-    val baseAdapter: BaseAdapter<T, V, BaseAction<T>>?
+    val baseAdapter: BaseAdapter<T, V, BaseAction<T>>
 
     if (adapter == null) {
         baseAdapter = BaseAdapter(
             viewClass = view,
             diffUtilTheSameCallback = diffUtil
         ).apply {
-            actionAdapter?.let {
+            baseAction?.let {
                 if (view.interfaces.contains(ViewAction::class.java))
                     action = it
                 else
@@ -23,6 +24,9 @@ fun <T, V, BA : BaseAction<T>, DU : DiffUtilTheSameCallback<T>> RecyclerView.ini
             }
         }
         adapter = baseAdapter
+    } else {
+        baseAdapter = adapter as BaseAdapter<T, V, BaseAction<T>>
     }
-    (adapter as AdapterAction<T, BA>).setData(data)
+
+    baseAdapter.items = data
 }

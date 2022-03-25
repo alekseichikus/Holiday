@@ -6,13 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.properties.Delegates
 
-class BaseAdapter<T, V, BA : BaseAction<T>>(
+class BaseAdapter<T, V : ViewGroup, BA : BaseAction<T>>(
     private val viewClass: Class<V>,
     private val diffUtilTheSameCallback: DiffUtilTheSameCallback<T>
 ) :
-    RecyclerView.Adapter<BaseViewHolder<T>>(),
+    RecyclerView.Adapter<BaseViewHolder<V>>(),
     AdapterAction<T, BA> {
-
     override var action: BA? = null
     override var items: Collection<T> by Delegates.observable(emptyList()) { _, old, new ->
         BaseDiffUtilCallback(
@@ -24,21 +23,15 @@ class BaseAdapter<T, V, BA : BaseAction<T>>(
 
     override fun getItemCount() = items.size
 
-    override fun setData(items: Collection<T>) {
-        this.items = items
-    }
-
-    override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<V>, position: Int) {
         holder.bind(items.elementAt(position))
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T> {
-        val customView =
-            viewClass.getConstructor(*getParametersType()).newInstance(*getArgs(parent.context))
-        return BaseViewHolder(view = customView as View)
-    }
-
-    override fun getData() = items
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<V> =
+        BaseViewHolder(
+            view = viewClass.getConstructor(*getParametersType())
+                .newInstance(*getArgs(parent.context))
+        )
 
     private fun getParametersType(): Array<Class<*>> {
         var parametersType = arrayOf<Class<*>>(Context::class.java)
