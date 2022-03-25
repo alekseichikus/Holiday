@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.properties.Delegates
 
-class BaseAdapter<T, V, BA : BaseAction<T>>(
+internal class BaseAdapter<T, V, BA : BaseAction<T>>(
     private val viewClass: Class<V>,
     private val diffUtilTheSameCallback: DiffUtilTheSameCallback<T>
 ) :

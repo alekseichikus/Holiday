@@ -2,7 +2,7 @@ package com.example.feature_adapter_generator
 
 import androidx.recyclerview.widget.DiffUtil
 
-open class BaseDiffUtilCallback<out T>(
+internal open class BaseDiffUtilCallback<out T>(
     private var oldList: Collection<T>,
     private var newList: Collection<T>,
     private val diffUtilTheSameCallback: DiffUtilTheSameCallback<T>
