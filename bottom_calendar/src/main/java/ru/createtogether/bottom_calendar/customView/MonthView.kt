@@ -3,19 +3,22 @@ package ru.createtogether.bottom_calendar.customView
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.example.feature_adapter_generator.BaseAction
 import com.example.feature_adapter_generator.initAdapter
-import ru.createtogether.birthday.imageCalendar.model.MonthModel
+import ru.createtogether.feature_day_utils.model.MonthModel
 import ru.createtogether.bottom_calendar.databinding.ItemMonthBinding
 import ru.createtogether.bottom_calendar.helpers.MonthAdapterListener
-import ru.createtogether.bottom_calendar.model.DayModel
+import ru.createtogether.feature_day_utils.model.DayModel
 import ru.createtogether.common.helpers.extension.withPattern
 
-class MonthView constructor(context: Context, var adapterListener: MonthAdapterListener) :
+class MonthView constructor(context: Context) :
     LinearLayout(context), com.example.feature_adapter_generator.ViewAction<MonthModel> {
 
     private val binding = ItemMonthBinding.inflate(LayoutInflater.from(context), this, false)
 
     private lateinit var month: MonthModel
+
+    private var adapterListener: MonthAdapterListener? = null
 
     init {
         addView(binding.root)
@@ -30,10 +33,8 @@ class MonthView constructor(context: Context, var adapterListener: MonthAdapterL
         binding.rvDays.initAdapter(
             month.days,
             DayView::class.java,
-            object : com.example.feature_adapter_generator.BaseAction<DayModel> {
-                override fun onClick(item: DayModel) {
-                    adapterListener.onDayClick(day = item)
-                }
+            BaseAction { day ->
+                adapterListener?.onDayClick(day = day)
             },
             object : com.example.feature_adapter_generator.DiffUtilTheSameCallback<DayModel> {
                 override fun areItemsTheSame(oldItem: DayModel, newItem: DayModel) =
@@ -51,7 +52,7 @@ class MonthView constructor(context: Context, var adapterListener: MonthAdapterL
         initDayAdapter()
     }
 
-    override fun initData(item: MonthModel) {
+    override fun initData(item: MonthModel, baseAction: BaseAction<MonthModel>?) {
         setMonth(month = item)
     }
 }

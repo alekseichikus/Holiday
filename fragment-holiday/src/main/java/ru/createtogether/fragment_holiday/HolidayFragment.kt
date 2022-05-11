@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.feature_adapter_generator.BaseAction
 import com.example.feature_adapter_generator.DiffUtilTheSameCallback
 import com.example.feature_adapter_generator.initAdapter
 import com.google.android.material.appbar.AppBarLayout
@@ -160,10 +161,8 @@ class HolidayFragment : BaseFragment(R.layout.fragment_holiday), IHolidayFragmen
         binding.rvPhoto.initAdapter(
             images,
             PhotoSmallView::class.java,
-            object : com.example.feature_adapter_generator.BaseAction<PhotoModel> {
-                override fun onClick(item: PhotoModel) {
-                    onPhotoClick(item)
-                }
+            BaseAction { photo ->
+                onPhotoClick(photo)
             },
             object : DiffUtilTheSameCallback<PhotoModel> {
                 override fun areItemsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
@@ -200,11 +199,13 @@ class HolidayFragment : BaseFragment(R.layout.fragment_holiday), IHolidayFragmen
         binding.viewPhotoLoad.loadImage(lifecycleScope, getHolidayParam().images.first().url)
     }
 
+    private var paramHoliday: String by argument()
+
     override fun getHolidayParam() =
         requireArguments().getSerializable(PARAM_HOLIDAY) as HolidayModel
 
     companion object {
-        private const val PARAM_HOLIDAY = "holiday"
+        private const val PARAM_HOLIDAY = "paramHoliday"
         fun getInstance(holiday: HolidayModel) = HolidayFragment().apply {
             arguments = bundleOf(PARAM_HOLIDAY to holiday)
         }

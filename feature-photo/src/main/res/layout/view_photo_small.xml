@@ -3,6 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:id="@+id/rootPhotoSmallView"
         android:layout_marginHorizontal="8dp"
         app:cardBackgroundColor="@color/backgroundFill"
         app:cardCornerRadius="12dp"
@@ -26,12 +27,12 @@
             android:id="@+id/llSelectedContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:alpha="0.65"
+            android:alpha="0.8"
+            android:visibility="gone"
             android:background="@drawable/background_border_stroke_12"
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/ivSelected"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"

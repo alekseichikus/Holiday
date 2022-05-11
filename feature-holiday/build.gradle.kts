@@ -56,7 +56,8 @@ dependencies {
     implementation(projects.featureHolidayUtils)
 
     implementation(projects.featurePhotoUtils)
-    implementation(projects.featurePhoto)
+
 
     implementation(projects.featureAdapterGenerator)
+    implementation(projects.featurePhoto)
 }

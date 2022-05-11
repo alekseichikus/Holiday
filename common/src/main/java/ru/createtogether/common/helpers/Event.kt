@@ -1,17 +1,9 @@
 package ru.createtogether.common.helpers
 
-class Event< T>(val status: Status, val data: T?, val throwable: Throwable? = null) {
-    companion object {
-        fun <T> loading(): Event<T> {
-            return Event(Status.LOADING, null, null)
-        }
+sealed class Event<out T> {
+    object Loading: Event<Nothing>()
 
-        fun <T> success(data: T? = null): Event<T> {
-            return Event(Status.SUCCESS, data, null)
-        }
+    data class Success<T>(val data: T): Event<T>()
 
-        fun <T> error(cause: Int? = null, throwable: Throwable? = null): Event<T> {
-            return Event(Status.ERROR, null, throwable)
-        }
-    }
+    data class Error(val throwable: Throwable): Event<Nothing>()
 }

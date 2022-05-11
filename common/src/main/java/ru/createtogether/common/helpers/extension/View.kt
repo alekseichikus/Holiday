@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.TypedValue
 import android.view.View
 import android.view.WindowInsets
@@ -34,6 +36,7 @@ import ru.createtogether.common.R
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.Utils
+import java.io.Serializable
 import java.lang.Exception
 import java.lang.NullPointerException
 import java.lang.StringBuilder
@@ -41,6 +44,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import kotlin.properties.ReadWriteProperty
 
 fun View.setPaddingTop() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -166,24 +170,23 @@ fun AppCompatActivity.onOpen(fragment: Fragment) {
 }
 
 suspend fun <T> Flow<T>.exceptionProcessing(stateFlow: MutableStateFlow<Event<T>>) {
-    catch { throwable ->
-        stateFlow.value = Event.error(throwable = throwable)
-    }
-    collect {
-        stateFlow.value = Event.success(it)
+    runCatching {
+        collect {
+            stateFlow.value = Event.Success(data = it)
+        }
+    }.onFailure { throwable ->
+        stateFlow.value = Event.Error(throwable = throwable)
     }
 }
 
 fun <T> Response<T>.responseProcessing(): T {
-    with(this) {
-        if (isSuccessful && body().isNotNull()) {
-            return body()!!
-        } else
-            throw IllegalArgumentException()
-    }
+    if (isSuccessful && body().isNotNull()) {
+        return body()!!
+    } else
+        throw IllegalArgumentException()
 }
 
-fun <T> T.isNotNull() = this != null
+fun Any?.isNotNull() = this != null
 
 fun View.showSnackBar(snackBarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this, snackBarText, timeLength).run {
@@ -199,61 +202,57 @@ fun Context.shareText(title: String, text: StringBuilder) {
 }
 
 fun ImageView.loadImage(
-    lifecycleCoroutineScope: LifecycleCoroutineScope,
     url: String,
     onSuccess: (() -> Unit)? = null,
     onError: (() -> Unit)? = null
 ) {
-    lifecycleCoroutineScope.launch {
-        Glide.with(this@loadImage)
-            .load(url)
-            .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
-            .addListener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    onError?.invoke()
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    onSuccess?.invoke()
-                    return false
-                }
-            })
-            .into(this@loadImage)
-    }
-}
-
-
-fun <T, K : Event<T>> Fragment.observeStateFlow(
-    stateFlow: StateFlow<K>,
-    onLoading: (() -> Unit)? = null,
-    onSuccess: ((T) -> Unit)? = null,
-    onError: ((Throwable) -> Unit)? = null
-) {
-    lifecycleScope.launch {
-        stateFlow.collect {
-            when (it.status) {
-                Status.LOADING -> onLoading?.invoke()
-                Status.SUCCESS -> {
-                    it.data?.let { data ->
-                        onSuccess?.invoke(data)
-                    } ?: run {
-                        onError?.invoke(NullPointerException())
-                    }
-                }
-                Status.ERROR -> onError?.invoke(it.throwable ?: NullPointerException())
+    Glide.with(this@loadImage)
+        .load(url)
+        .transition(DrawableTransitionOptions.withCrossFade(Constants.ANIMATE_TRANSITION_DURATION))
+        .addListener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                onError?.invoke()
+                return false
             }
-        }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                onSuccess?.invoke()
+                return false
+            }
+        })
+        .into(this@loadImage)
+}
+
+fun <T> Bundle.put(key: String, value: T) {
+    when (value) {
+        is Boolean -> putBoolean(key, value)
+        is String -> putString(key, value)
+        is Int -> putInt(key, value)
+        is Short -> putShort(key, value)
+        is Long -> putLong(key, value)
+        is Byte -> putByte(key, value)
+        is ByteArray -> putByteArray(key, value)
+        is Char -> putChar(key, value)
+        is CharArray -> putCharArray(key, value)
+        is CharSequence -> putCharSequence(key, value)
+        is Float -> putFloat(key, value)
+        is Bundle -> putBundle(key, value)
+        is Parcelable -> putParcelable(key, value)
+        is Serializable -> putSerializable(key, value)
+        else -> throw IllegalStateException("Type of property $key is not supported")
     }
 }
+
+fun <T : Any> argument(): ReadWriteProperty<Fragment, T> =
+    FragmentArgumentDelegate()

@@ -13,9 +13,6 @@ object PhotoUtil {
             oldItem.isSelected == newItem.isSelected
     }
 
-    fun getPhotoAdapterListener(onClick: ((PhotoModel) -> Unit)? = null) = object : BaseAction<PhotoModel> {
-        override fun onClick(item: PhotoModel) {
-            onClick?.invoke(item)
-        }
-    }
+    fun getPhotoAdapterListener(onClick: ((PhotoModel) -> Unit)? = null) =
+        BaseAction<PhotoModel> { photo -> onClick?.invoke(photo) }
 }

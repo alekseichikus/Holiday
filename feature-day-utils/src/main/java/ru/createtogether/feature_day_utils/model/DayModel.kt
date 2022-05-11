@@ -1,6 +1,6 @@
-package ru.createtogether.bottom_calendar.model
+package ru.createtogether.feature_day_utils.model
 
-import ru.createtogether.birthday.imageCalendar.helpers.DayStateEnum
+import ru.createtogether.feature_day_utils.model.helpers.DayStateEnum
 import java.util.*
 
 data class DayModel(

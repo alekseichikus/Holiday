@@ -3,6 +3,7 @@ package ru.createtogether.feature_characteristic.presenter
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import com.example.feature_adapter_generator.BaseAction
 import ru.createtogether.feature_characteristic.databinding.ViewCharacteristicBinding
 import ru.createtogether.feature_characteristic_utils.CharacteristicModel
 
@@ -37,7 +38,7 @@ class CharacteristicView constructor(context: Context) :
         binding.tvDescription.text = characteristic.description
     }
 
-    override fun initData(item: CharacteristicModel) {
+    override fun initData(item: CharacteristicModel, baseAction: BaseAction<CharacteristicModel>?) {
         setCharacteristic(characteristic = item)
     }
 }

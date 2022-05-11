@@ -2,7 +2,6 @@ plugins {
     id ("com.android.library")
     id ("org.jetbrains.kotlin.android")
     id ("kotlin-kapt")
-    id ("dagger.hilt.android.plugin")
 }
 
 android {
@@ -63,10 +62,9 @@ dependencies {
 
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    //hilt
-    implementation("com.google.dagger:hilt-android:2.38.1")
-    kapt("com.google.dagger:hilt-compiler:2.37")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    //dagger
+    implementation ("com.google.dagger:dagger:2.41")
+    kapt ("com.google.dagger:dagger-compiler:2.41")
 
     implementation("com.squareup.retrofit2:retrofit:2.7.2")
 

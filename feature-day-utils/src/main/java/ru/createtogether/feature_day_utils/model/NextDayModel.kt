@@ -6,6 +6,6 @@ import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class NextDayModel(
-    var id: Int,
-    var dateString: String
+    var id: Int?,
+    var dateString: String?
 ): Serializable

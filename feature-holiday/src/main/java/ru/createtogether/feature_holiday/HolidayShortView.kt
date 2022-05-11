@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.example.feature_adapter_generator.BaseAction
+import com.example.feature_adapter_generator.DiffUtilTheSameCallback
+import com.example.feature_adapter_generator.ViewAction
 import com.example.feature_adapter_generator.initAdapter
 import ru.createtogether.common.helpers.extension.setDateString
 import ru.createtogether.common.helpers.extension.withPattern
@@ -17,14 +20,15 @@ import ru.createtogether.feature_photo_utils.PhotoModel
 import java.util.*
 
 class HolidayShortView(
-    context: Context,
-    var adapterListener: HolidayShortAdapterListener
-) : FrameLayout(context), com.example.feature_adapter_generator.ViewAction<HolidayModel> {
+    context: Context
+) : FrameLayout(context), ViewAction<HolidayModel> {
 
     private var binding: ViewHolidayShortBinding =
         ViewHolidayShortBinding.inflate(LayoutInflater.from(context), this, false)
 
     private lateinit var holiday: HolidayModel
+
+    private var adapterListener: HolidayShortAdapterListener? = null
 
     init {
         addView(binding.root)
@@ -46,20 +50,20 @@ class HolidayShortView(
             with(holiday) {
                 isLike = !isLike
                 configureLike(isLike = isLike)
-                adapterListener.onLikeClick(holiday = holiday)
+                adapterListener?.onLikeClick(holiday = holiday)
             }
         }
     }
 
     private fun setOpenClick() {
         binding.root.setOnClickListener {
-            adapterListener.onClick(item = holiday)
+            adapterListener?.onClick(item = holiday)
         }
     }
 
     private fun setOpenLongClick() {
         binding.root.setOnLongClickListener {
-            adapterListener.onLongClick(holiday = holiday)
+            adapterListener?.onLongClick(holiday = holiday)
             return@setOnLongClickListener true
         }
     }
@@ -127,13 +131,11 @@ class HolidayShortView(
             rvPhoto.initAdapter(
                 images,
                 PhotoSmallView::class.java,
-                object : com.example.feature_adapter_generator.BaseAction<PhotoModel> {
-                    override fun onClick(item: PhotoModel) {
-                        onPhotoClick(photo = item)
-                    }
+                BaseAction { photo ->
+                    onPhotoClick(photo = photo)
                 },
                 object :
-                    com.example.feature_adapter_generator.DiffUtilTheSameCallback<PhotoModel> {
+                    DiffUtilTheSameCallback<PhotoModel> {
                     override fun areItemsTheSame(oldItem: PhotoModel, newItem: PhotoModel) =
                         oldItem.id == newItem.id
 
@@ -145,10 +147,10 @@ class HolidayShortView(
     }
 
     private fun onPhotoClick(photo: PhotoModel) {
-        adapterListener.onPhotoClick(holiday = holiday, photo = photo)
+        adapterListener?.onPhotoClick(holiday = holiday, photo = photo)
     }
 
-    override fun initData(item: HolidayModel) {
+    override fun initData(item: HolidayModel, baseAction: BaseAction<HolidayModel>?) {
         setHoliday(holiday = item)
     }
 }

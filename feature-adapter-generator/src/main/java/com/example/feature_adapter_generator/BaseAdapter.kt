@@ -24,28 +24,12 @@ internal class BaseAdapter<T, V, BA : BaseAction<T>>(
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<T, V>, position: Int) {
-        holder.bind(items.elementAt(position))
+        holder.bind(items.elementAt(position), action)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<T, V> =
         BaseViewHolder(
-            view = viewClass.getConstructor(*getParametersType())
-                .newInstance(*getArgs(parent.context))
+            view = viewClass.getConstructor(Context::class.java)
+                .newInstance(parent.context)
         )
-
-    private fun getParametersType(): Array<Class<*>> {
-        var parametersType = arrayOf<Class<*>>(Context::class.java)
-        action?.let {
-            parametersType += it.javaClass.interfaces.first()
-        }
-        return parametersType
-    }
-
-    private fun getArgs(context: Context): Array<Any> {
-        var parametersType = arrayOf<Any>(context)
-        action?.let {
-            parametersType += it
-        }
-        return parametersType
-    }
 }

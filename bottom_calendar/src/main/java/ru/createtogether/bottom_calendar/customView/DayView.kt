@@ -8,18 +8,20 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.example.feature_adapter_generator.BaseAction
 import com.example.feature_adapter_generator.ViewAction
-import ru.createtogether.birthday.imageCalendar.helpers.DayStateEnum
+import ru.createtogether.feature_day_utils.model.helpers.DayStateEnum
 import ru.createtogether.bottom_calendar.R
 import ru.createtogether.bottom_calendar.databinding.ItemDayBinding
-import ru.createtogether.bottom_calendar.model.DayModel
+import ru.createtogether.feature_day_utils.model.DayModel
 import java.util.*
 
-class DayView constructor(context: Context, var adapterListener: BaseAction<DayModel>) :
+class DayView constructor(context: Context) :
     ConstraintLayout(context), ViewAction<DayModel> {
 
     private val binding = ItemDayBinding.inflate(LayoutInflater.from(context), this, false)
 
     private lateinit var day: DayModel
+
+    private var adapterListener: BaseAction<DayModel>? = null
 
     init {
         addView(binding.root)
@@ -31,7 +33,7 @@ class DayView constructor(context: Context, var adapterListener: BaseAction<DayM
 
     private fun setRootClick() {
         binding.root.setOnClickListener {
-            adapterListener.onClick(item = day)
+            adapterListener?.onClick(item = day)
         }
     }
 
@@ -87,7 +89,7 @@ class DayView constructor(context: Context, var adapterListener: BaseAction<DayM
         setSelected()
     }
 
-    override fun initData(item: DayModel) {
+    override fun initData(item: DayModel, baseAction: BaseAction<DayModel>?) {
         setDay(day = item)
     }
 }

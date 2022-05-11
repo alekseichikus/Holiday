@@ -2,7 +2,6 @@ plugins {
     id ("com.android.application")
     id ("kotlin-android")
     id ("kotlin-kapt")
-    id ("dagger.hilt.android.plugin")
     id ("com.google.gms.google-services")
     id ("com.google.firebase.crashlytics")
 }
@@ -57,14 +56,12 @@ dependencies {
 
     implementation ("androidx.fragment:fragment-ktx:1.3.6")
 
-    //hilt
-    implementation ("com.google.dagger:hilt-android:2.38.1")
-    implementation ("androidx.hilt:hilt-work:1.0.0")
-    kapt ("com.google.dagger:hilt-compiler:2.37")
-    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    //dagger
+    implementation ("com.google.dagger:dagger:2.41")
+    kapt ("com.google.dagger:dagger-compiler:2.41")
 
     //Retrofit
-    implementation ("com.squareup.retrofit2:retrofit:2.7.2")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2")
 

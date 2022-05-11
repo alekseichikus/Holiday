@@ -152,7 +152,8 @@ class PhotoFragment : BaseFragment(R.layout.fragment_photo), IPhotoFragment {
     }
 
     private fun loadImage(image: PhotoModel) {
-        binding.photoView.loadImage(lifecycleScope, image.url, onSuccess = {
+        binding.photoView.loadImage(
+            image.url, onSuccess = {
             binding.progressBar.show()
             binding.llErrorContainer.gone()
         }, onError = {

@@ -1,4 +1,4 @@
-package ru.createtogether.birthday.imageCalendar.helpers
+package ru.createtogether.feature_day_utils.model.helpers
 
 enum class DayStateEnum {
     PREVIOUS,

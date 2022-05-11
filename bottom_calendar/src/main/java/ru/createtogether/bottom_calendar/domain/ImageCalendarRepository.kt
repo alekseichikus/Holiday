@@ -1,8 +1,7 @@
 package ru.createtogether.bottom_calendar.domain
 
 import kotlinx.coroutines.flow.Flow
-import ru.createtogether.birthday.imageCalendar.model.MonthModel
-import ru.createtogether.common.helpers.Event
+import ru.createtogether.feature_day_utils.model.MonthModel
 import java.util.*
 
 

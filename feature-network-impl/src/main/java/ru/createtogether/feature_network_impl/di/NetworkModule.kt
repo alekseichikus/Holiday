@@ -1,9 +1,7 @@
-package ru.createtogether.feature_network_impl
+package ru.createtogether.feature_network_impl.di
 
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +10,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 @Module
-@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
     @Provides
@@ -25,9 +22,7 @@ object NetworkModule {
     }
 
     @Provides
-    fun provideHttpClient(): OkHttpClient {
-        val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+    fun provideHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
 
         val dispatcher = Dispatcher()
         dispatcher.maxRequests = Constants.MAX_REQUESTS
@@ -41,4 +36,8 @@ object NetworkModule {
             .writeTimeout(60, TimeUnit.SECONDS)
             .build()
     }
+
+    @Provides
+    fun provideHttpLoggingInterceptor() =
+        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
 }

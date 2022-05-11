@@ -7,17 +7,12 @@ import ru.createtogether.feature_holiday_impl.R
 import ru.createtogether.feature_holiday_utils.model.HolidayModel
 
 class FavoriteViewModel : BaseViewModel() {
-    fun updateSort(sortId: Int, holidays: Event<List<HolidayModel>>): Event<List<HolidayModel>> {
-        with(holidays) {
-            if (status == Status.SUCCESS) {
-                data?.let {
-                    return when (sortId) {
-                        R.id.idName -> Event.success(it.sortedBy { holiday -> holiday.title })
-                        else -> Event.success(it.sortedBy { holiday -> holiday.date })
-                    }
-                }
+    fun updateSort(sortId: Int, data: List<HolidayModel>) = data.sortedBy { holiday ->
+        when (sortId) {
+            R.id.idName -> holiday.title
+            else -> {
+                holiday.date
             }
         }
-        return holidays
     }
 }

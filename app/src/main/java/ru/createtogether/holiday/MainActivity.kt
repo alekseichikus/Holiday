@@ -35,14 +35,16 @@ class MainActivity : AppCompatActivity(), MainActions {
 
         configureViews()
 
-        onOpen(MainFragment.getInstance())
+        if (savedInstanceState == null) {
+            onOpen(MainFragment.getInstance())
+        }
     }
 
     private fun configureViews() {
         hideSystemUI()
     }
 
-    private fun initData(){
+    private fun initData() {
         appViewModel.versionCode = BuildConfig.VERSION_NAME
     }
 

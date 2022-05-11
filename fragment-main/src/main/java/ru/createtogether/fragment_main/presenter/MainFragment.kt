@@ -1,17 +1,21 @@
 package ru.createtogether.fragment_main.presenter
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.squareup.moshi.JsonDataException
 import dagger.hilt.android.AndroidEntryPoint
 import ru.createtogether.bottom_calendar.presenter.CalendarBottomFragment
 import ru.createtogether.common.helpers.MainActions
 import ru.createtogether.common.helpers.baseFragment.BaseFragment
 import com.example.feature_adapter_generator.initAdapter
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.extension.*
@@ -28,6 +32,7 @@ import ru.createtogether.fragment_main.databinding.FragmentMainBinding
 import ru.createtogether.fragment_main.presenter.viewModel.MainViewModel
 import ru.createtogether.fragment_photo.presenter.PhotoFragment
 import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 import java.util.*
 
 
@@ -48,10 +53,18 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
         initRequests()
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        viewLifecycleOwner
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+    }
+
     private fun initRequests() {
-        if (holidayViewModel.holidaysOfDayResponse.value.status == Status.LOADING) {
-            loadHolidaysOfDay()
-        }
+        loadHolidaysOfDay()
     }
 
     override fun initDataBinding() {
@@ -142,48 +155,69 @@ class MainFragment : BaseFragment(R.layout.fragment_main), IMainFragment {
     }
 
     override fun observeLoadHolidaysOfDay() {
-        observeStateFlow(holidayViewModel.holidaysOfDayResponse, onLoading = {
-            setDate(viewModel.getDate())
+        lifecycleScope.launch {
+            holidayViewModel.holidaysOfDayResponse.collect {
+                when (it) {
+                    is Event.Loading -> {
+                        setDate(viewModel.getDate())
 
-            showShimmers()
-            blockUI()
-            hideContent()
-        }, onSuccess = { holidays ->
-            if (holidays.isEmpty()) {
-                holidayViewModel.loadNextDateWithHolidays(date = viewModel.getDate())
-            } else {
-                hideShimmers()
-                unBlockUI()
-                setContent(holidays = holidays)
+                        showShimmers()
+                        blockUI()
+                        hideContent()
+                    }
+                    is Event.Success -> {
+                        if (it.data.isEmpty()) {
+                            holidayViewModel.loadNextDateWithHolidays(date = viewModel.getDate())
+                        } else {
+                            hideShimmers()
+                            unBlockUI()
+                            setContent(holidays = it.data)
+                        }
+                    }
+                    is Event.Error -> {
+                        hideShimmers()
+                        unBlockUI()
+                        when (it.throwable) {
+                            is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                            else -> showInfoBoardInternetError()
+                        }
+                    }
+                }
             }
-        }, onError = { throwable ->
-            hideShimmers()
-            unBlockUI()
-            when (throwable) {
-                is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
-                else -> showInfoBoardInternetError()
-            }
-        })
+        }
     }
 
     override fun observeLoadNextDayWithHolidays() {
-        observeStateFlow(holidayViewModel.nextDateWithHolidaysResponse,
-            onSuccess = { day ->
-                unBlockUI()
-                hideShimmers()
+        lifecycleScope.launch {
+            holidayViewModel.nextDateWithHolidaysResponse.collect {
+                when (it) {
+                    is Event.Loading -> {
+                    }
+                    is Event.Success -> {
+                        unBlockUI()
+                        hideShimmers()
 
-                binding.holidaysOfCurrentDayEmptyView.show()
-                binding.holidaysOfCurrentDayEmptyView.initDate(
-                    date = Calendar.getInstance().setDateString(day.dateString).time
-                )
-            }, onError = { throwable ->
-                unBlockUI()
-                hideShimmers()
-                when (throwable) {
-                    is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
-                    else -> showInfoBoardInternetError()
+                        if (it.data.id.isNotNull()) {
+                            binding.holidaysOfCurrentDayEmptyView.show()
+                            binding.holidaysOfCurrentDayEmptyView.initDate(
+                                date = Calendar.getInstance()
+                                    .setDateString(it.data.dateString.orEmpty()).time
+                            )
+                        } else {
+                            showInfoBoardSupportError()
+                        }
+                    }
+                    is Event.Error -> {
+                        unBlockUI()
+                        hideShimmers()
+                        when (it.throwable) {
+                            is IllegalArgumentException, is JsonDataException -> showInfoBoardSupportError()
+                            else -> showInfoBoardInternetError()
+                        }
+                    }
                 }
-            })
+            }
+        }
     }
 
     private fun loadHolidaysOfDay() {

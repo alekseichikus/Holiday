@@ -4,21 +4,23 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import ru.createtogether.bottom_calendar.model.DayModel
-import ru.createtogether.birthday.imageCalendar.model.MonthModel
+import ru.createtogether.feature_day_utils.model.DayModel
+import ru.createtogether.feature_day_utils.model.MonthModel
 import ru.createtogether.bottom_calendar.R
 import ru.createtogether.bottom_calendar.customView.MonthView
 import ru.createtogether.bottom_calendar.databinding.BottomDialogCalendarBinding
 import ru.createtogether.bottom_calendar.helpers.MonthAdapterListener
 import ru.createtogether.bottom_calendar.presenter.viewModel.CalendarViewModel
-import ru.createtogether.common.helpers.Status
 import ru.createtogether.common.helpers.baseFragment.BaseBottomDialogFragment
 import com.example.feature_adapter_generator.initAdapter
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import ru.createtogether.common.helpers.Event
 import ru.createtogether.common.helpers.extension.*
 import ru.createtogether.feature_holiday_impl.viewModel.BaseHolidayViewModel
 import ru.createtogether.feature_info_board.helpers.InfoBoardListener
-import java.lang.IllegalArgumentException
 import java.util.*
 
 @AndroidEntryPoint
@@ -78,27 +80,24 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun observeHolidaysOfMonthResponse() {
-        observeStateFlow(baseHolidayViewModel.holidaysOfMonthResponse,
-            onSuccess = { days ->
-                hideContent()
-                binding.rvMonths.show()
-
-                calendarViewModel.loadCalendarsResponse.value.data?.let {
-                    it.forEach { month ->
-                        month.days.forEach { day ->
-
-                            day.count = days.find {
-                                it.dateString == day.calendar.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
-                            }?.holidaysCount ?: 0
-                        }
+        lifecycleScope.launch {
+            baseHolidayViewModel.holidaysOfMonthResponse.collect {
+                when (it) {
+                    is Event.Loading -> {
                     }
+                    is Event.Success -> {
+                        hideContent()
+                        binding.rvMonths.show()
 
-                    initCalendarAdapter(it)
+                        initCalendarAdapter(it.data)
+                    }
+                    is Event.Error -> {
+                        hideContent()
+                        showInternetError()
+                    }
                 }
-            }, onError = { throwable ->
-                hideContent()
-                showInternetError()
-            })
+            }
+        }
     }
 
     private fun showInternetError() {
@@ -122,19 +121,26 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
     }
 
     private fun observeMonthsResponse() {
-        observeStateFlow(calendarViewModel.loadCalendarsResponse,
-            onLoading = {
-                hideContent()
-                binding.progressBar.show()
-            },
-            onSuccess = {
-                baseHolidayViewModel.loadHolidaysOfMonth(
-                    Calendar.getInstance().apply {
-                        timeInMillis = this@CalendarBottomFragment.time
-                        set(Calendar.DAY_OF_MONTH, 1)
-                    }.time.withPattern(Constants.DEFAULT_DATE_PATTERN)
-                )
-            })
+        lifecycleScope.launch {
+            calendarViewModel.loadCalendarsResponse.collect {
+                when (it) {
+                    is Event.Loading -> {
+                        hideContent()
+                        binding.progressBar.show()
+                    }
+                    is Event.Success -> {
+                        baseHolidayViewModel.loadHolidaysOfMonth(
+                            Calendar.getInstance().apply {
+                                timeInMillis = this@CalendarBottomFragment.time
+                                set(Calendar.DAY_OF_MONTH, 1)
+                            }.time.withPattern(Constants.DEFAULT_DATE_PATTERN), it.data
+                        )
+                    }
+                    is Event.Error -> {
+                    }
+                }
+            }
+        }
     }
 
     private fun onDayClick(day: DayModel) {
@@ -157,7 +163,9 @@ class CalendarBottomFragment : BaseBottomDialogFragment(R.layout.bottom_dialog_c
                 override fun onClick(item: MonthModel) {
 
                 }
-            }, object : com.example.feature_adapter_generator.DiffUtilTheSameCallback<MonthModel> {
+            },
+            object :
+                com.example.feature_adapter_generator.DiffUtilTheSameCallback<MonthModel> {
                 override fun areItemsTheSame(oldItem: MonthModel, newItem: MonthModel) =
                     oldItem == newItem
 

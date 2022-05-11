@@ -18,6 +18,12 @@ android {
         dataBinding = true
     }
 
+    sourceSets {
+        //getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("debug").java.srcDirs("src/debug/kotlin")
+        //getByName("prod").java.srcDirs("src/common/kotlin")
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -42,9 +48,6 @@ dependencies {
     implementation("androidx.core:core-ktx:1.7.0")
     implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("com.google.android.material:material:1.5.0")
-    implementation("junit:junit:4.13.2")
-    implementation("androidx.test.ext:junit:1.1.3")
-    implementation("androidx.test.espresso:espresso-core:3.4.0")
 
     implementation(projects.common)
 
@@ -54,4 +57,13 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
     implementation(projects.featureAdapterGenerator)
+
+    testImplementation("junit:junit:4.12")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.3.40")
+    testImplementation("com.nhaarman:mockito-kotlin:1.5.0")
+    testImplementation("org.mockito:mockito-core:3.4.6")
+
+    androidTestImplementation("com.android.support.test:rules:1.0.2")
+    androidTestImplementation("com.android.support.test:runner:1.0.2")
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.2")
 }
